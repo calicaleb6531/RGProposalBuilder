@@ -16,43 +16,52 @@
       background-color: #f3f4f6;
     }
 
-    /* PRINT: make it pure white, no borders/shadows/margins, hide controls */
+    /* Strongest possible print cleanup */
     @page {
-      size: auto;
-      margin: 0; /* browsers may still enforce minimal hardware margins */
+      margin: 0;
     }
     @media print {
       html, body {
         background: #fff !important;
+        margin: 0 !important;
+        padding: 0 !important;
       }
 
-      /* Hide any element marked as no-print and its children */
+      /* Hide buttons and UI controls */
       .no-print, .no-print * {
         display: none !important;
       }
 
-      /* Remove visual chrome from the printed document area */
-      #proposal-output,
-      .proposal-output-container {
-        background: #fff !important;
-        border: none !important;
+      /* Remove all backgrounds, shadows, and borders globally */
+      *, *::before, *::after {
         box-shadow: none !important;
+        border: none !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+      }
+
+      /* Force the printed content container to be pure white and full width */
+      #proposal-output {
+        background: #fff !important;
         padding: 0 !important;
         margin: 0 !important;
-        border-radius: 0 !important;
-      }
-
-      /* Also neutralize common Tailwind utility effects inside */
-      #proposal-output * {
         box-shadow: none !important;
-        background: transparent !important; /* text stays visible; images unaffected */
+        border: none !important;
       }
 
-      /* Ensure the page uses full width (browser still controls printable area) */
+      /* Remove decorative logo separator */
+      .logo-container {
+        border-bottom: none !important;
+        padding-bottom: 0 !important;
+        margin-bottom: 1rem !important;
+      }
+
+      /* Ensure proposal takes full page width */
       #app {
         max-width: none !important;
-        width: auto !important;
+        width: 100% !important;
         margin: 0 !important;
+        padding: 0 !important;
       }
     }
 
@@ -74,7 +83,7 @@
 <body class="bg-gray-100 min-h-screen p-4 flex items-center justify-center">
   <div id="app" class="max-w-4xl w-full">
 
-    <!-- Editor (never printed) -->
+    <!-- Form Section -->
     <div id="proposal-form" class="bg-white p-8 rounded-lg shadow-xl border border-gray-200 no-print">
       <div class="logo-container">
         <img src="https://github.com/calicaleb6531/RGProposalBuilder/blob/main/RGLogo.png?raw=true"
@@ -84,6 +93,7 @@
 
       <h1 class="text-3xl font-bold text-center text-gray-800 mb-6 uppercase tracking-wide">Proposal</h1>
 
+      <!-- Input Fields -->
       <div class="space-y-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
@@ -187,7 +197,7 @@
       </div>
     </div>
 
-    <!-- Output (printed) -->
+    <!-- Output Section -->
     <div id="proposal-output" class="hidden bg-white p-8 rounded-lg shadow-xl border border-gray-200 proposal-output-container">
       <div class="logo-container">
         <img src="https://github.com/calicaleb6531/RGProposalBuilder/blob/main/RGLogo.png?raw=true"
@@ -267,17 +277,17 @@
           <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
             <div class="flex flex-col space-y-2">
               <p class="mt-4 border-b border-gray-400 pb-1">Signature:</p>
-              <p class="text-xs text-gray-500">_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</p>
+              <p class="text-xs text-gray-500">_______________________________________________</p>
             </div>
             <div class="flex flex-col space-y-2">
               <p class="mt-4 border-b border-gray-400 pb-1">Date:</p>
-              <p class="text-xs text-gray-500">_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</p>
+              <p class="text-xs text-gray-500">_______________________________________________</p>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Controls (never printed) -->
+      <!-- Buttons (hidden on print) -->
       <div class="flex justify-end space-x-4 mt-8 no-print">
         <button id="back-btn" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
           Back to Editor
@@ -289,7 +299,6 @@
     </div>
   </div>
 
-  <!-- Logic -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const proposalForm = document.getElementById('proposal-form');
@@ -331,11 +340,9 @@
       const outputTotal = document.getElementById('output-total');
       const outputPaymentTerms = document.getElementById('output-payment-terms');
 
-      // Default today's date
       const today = new Date().toISOString().split('T')[0];
       dateInput.value = today;
 
-      // Add pricing item row
       function addPricingItem() {
         const itemDiv = document.createElement('div');
         itemDiv.className = 'flex items-center space-x-2';
@@ -351,7 +358,6 @@
       }
       addPriceItemBtn.addEventListener('click', addPricingItem);
 
-      // Generate output
       generateBtn.addEventListener('click', () => {
         outputTo.textContent = toInput.value || 'N/A';
         outputStreetAddress.textContent = streetAddressInput.value || '';
@@ -364,7 +370,6 @@
         outputWarranty.textContent = warrantyInput.value || 'N/A';
         outputPaymentTerms.textContent = paymentTermsInput.value || 'N/A';
 
-        // Description -> bullets
         outputDescriptionList.innerHTML = '';
         const descriptionLines = descriptionInput.value.split('\n').filter(line => line.trim() !== '');
         descriptionLines.forEach(line => {
@@ -373,7 +378,6 @@
           outputDescriptionList.appendChild(li);
         });
 
-        // Pricing
         let subtotal = 0;
         let taxableSubtotal = 0;
         outputPricingTable.innerHTML = '';
@@ -383,7 +387,6 @@
           const descEl = itemDiv.querySelector('.pricing-description');
           const amtEl = itemDiv.querySelector('.pricing-amount');
           const taxEl = itemDiv.querySelector('.taxable-checkbox');
-
           const description = (descEl?.value || '').trim();
           const price = parseFloat(amtEl?.value);
           const isTaxable = !!taxEl?.checked;
@@ -391,7 +394,6 @@
           if (description && !isNaN(price)) {
             subtotal += price;
             if (isTaxable) taxableSubtotal += price;
-
             const row = document.createElement('div');
             row.className = 'flex justify-between py-1 border-b border-gray-100';
             row.innerHTML = `
@@ -410,17 +412,11 @@
         outputSalesTax.textContent = `$${salesTaxAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
         outputTotal.textContent = `$${total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-        // Swap views
         proposalForm.classList.add('hidden');
         proposalOutput.classList.remove('hidden');
       });
 
-      // Print
-      printBtn.addEventListener('click', () => {
-        window.print();
-      });
-
-      // Back to editor
+      printBtn.addEventListener('click', () => window.print());
       backBtn.addEventListener('click', () => {
         proposalOutput.classList.add('hidden');
         proposalForm.classList.remove('hidden');
