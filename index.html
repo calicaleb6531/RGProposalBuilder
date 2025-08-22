@@ -9,36 +9,30 @@
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
-    /* Screen base */
+    /* Custom font */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-    :root {
-      --print-body: 12.25px;    /* base print font */
-      --print-h1:   20px;       /* main title */
-      --print-h2:   14px;       /* section titles */
-      --print-gap:  10px;       /* vertical rhythm */
-    }
     body {
       font-family: 'Inter', sans-serif;
       background-color: #f3f4f6;
     }
-    .logo-container {
-      display: flex; justify-content: center; align-items: center;
-      margin-bottom: 2rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 1rem;
-    }
-    .logo-container img { max-width: 100%; height: auto; }
 
-    /* Strong print cleanup + better fitting layout */
+    /* Strongest possible print cleanup */
     @page {
-      size: Letter;
-      margin: 0.75in; /* consistent margins; change if you want more/less content per page */
+      margin: 0;
     }
     @media print {
-      html, body { background: #fff !important; margin: 0 !important; padding: 0 !important; }
+      html, body {
+        background: #fff !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
 
-      /* Hide controls */
-      .no-print, .no-print * { display: none !important; }
+      /* Hide buttons and UI controls */
+      .no-print, .no-print * {
+        display: none !important;
+      }
 
-      /* Remove all visual chrome */
+      /* Remove all backgrounds, shadows, and borders globally */
       *, *::before, *::after {
         box-shadow: none !important;
         border: none !important;
@@ -46,51 +40,61 @@
         background: transparent !important;
       }
 
-      /* Keep images visible */
-      img { background: transparent !important; }
-
-      /* Use full width inside page margins */
-      #app { max-width: none !important; width: auto !important; margin: 0 !important; padding: 0 !important; }
-
-      /* Printed document container: no padding/margins—@page handles whitespace */
+      /* Force the printed content container to be pure white and full width */
       #proposal-output {
         background: #fff !important;
-        padding: 0 !important; margin: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
       }
 
-      /* Typography & spacing tuned for print */
-      body { font-size: var(--print-body); line-height: 1.35; color: #111827; }
-      h1 { font-size: var(--print-h1) !important; margin: 0 0 calc(var(--print-gap) * 1.2) 0 !important; }
-      .section-title { font-size: var(--print-h2); font-weight: 700; text-align: center; margin: var(--print-gap) 0 6px 0; }
-      p, ul, li { margin: 0 0 6px 0; }
-      ul { padding-left: 16px; }
-      .row { display: flex; justify-content: space-between; gap: 12px; margin: 4px 0; }
+      /* Remove decorative logo separator */
+      .logo-container {
+        border-bottom: none !important;
+        padding-bottom: 0 !important;
+        margin-bottom: 1rem !important;
+      }
 
-      /* Reduce the logo area spacing in print */
-      .logo-container { border-bottom: 0 !important; padding-bottom: 6px !important; margin-bottom: 10px !important; }
+      /* Ensure proposal takes full page width */
+      #app {
+        max-width: none !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+    }
 
-      /* Prevent awkward page breaks inside key blocks */
-      .keep-together { break-inside: avoid; page-break-inside: avoid; -webkit-column-break-inside: avoid; }
-      .acceptance { break-inside: avoid; }
-
-      /* Trim extra separators in print */
-      .thin-sep { border-top: 1px solid #e5e7eb; margin-top: 8px; padding-top: 8px; }
+    /* Center the logo image */
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 1rem;
+    }
+    .logo-container img {
+      max-width: 100%;
+      height: auto;
     }
   </style>
 </head>
 <body class="bg-gray-100 min-h-screen p-4 flex items-center justify-center">
   <div id="app" class="max-w-4xl w-full">
-    <!-- Editor (never printed) -->
+
+    <!-- Form Section -->
     <div id="proposal-form" class="bg-white p-8 rounded-lg shadow-xl border border-gray-200 no-print">
       <div class="logo-container">
         <img src="https://github.com/calicaleb6531/RGProposalBuilder/blob/main/RGLogo.png?raw=true"
              onerror="this.onerror=null;this.src='https://placehold.co/200x60/87CEEB/ffffff?text=Your+Logo+Here';"
              alt="R & G Air Conditioning & Refrigeration Service Corp. Logo">
       </div>
+
       <h1 class="text-3xl font-bold text-center text-gray-800 mb-6 uppercase tracking-wide">Proposal</h1>
 
+      <!-- Input Fields -->
       <div class="space-y-6">
-        <!-- Client Info -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label for="to" class="block text-sm font-medium text-gray-700">To:</label>
@@ -102,11 +106,11 @@
           </div>
         </div>
 
-        <!-- Address -->
         <div>
           <label for="street-address" class="block text-sm font-medium text-gray-700">Street Address:</label>
           <input type="text" id="street-address" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
         </div>
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
             <label for="city" class="block text-sm font-medium text-gray-700">City:</label>
@@ -122,7 +126,6 @@
           </div>
         </div>
 
-        <!-- Job details -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label for="job-name" class="block text-sm font-medium text-gray-700">Job Name:</label>
@@ -144,21 +147,21 @@
           <p class="text-sm text-gray-600 italic mt-2">Our service proposal for the reference project. The detail of services covered under this proposal is described below.</p>
         </div>
 
-        <!-- Scope / Desc / Warranty -->
         <div>
           <label for="scope-of-services" class="block text-sm font-medium text-gray-700">Scope of Services:</label>
           <textarea id="scope-of-services" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border"></textarea>
         </div>
+
         <div>
           <label for="project-description" class="block text-sm font-medium text-gray-700">Project Description:</label>
           <textarea id="project-description" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border" placeholder="Enter items on separate lines for bullet points..."></textarea>
         </div>
+
         <div>
           <label for="warranty" class="block text-sm font-medium text-gray-700">Warranty:</label>
           <textarea id="warranty" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border"></textarea>
         </div>
 
-        <!-- Pricing -->
         <div>
           <p class="block text-sm font-medium text-gray-700">Pricing:</p>
           <div id="pricing-inputs-container" class="space-y-2 mt-1">
@@ -194,89 +197,97 @@
       </div>
     </div>
 
-    <!-- Output (printed) -->
-    <div id="proposal-output" class="hidden bg-white p-8 rounded-lg shadow-xl border border-gray-200">
-      <div class="logo-container keep-together">
+    <!-- Output Section -->
+    <div id="proposal-output" class="hidden bg-white p-8 rounded-lg shadow-xl border border-gray-200 proposal-output-container">
+      <div class="logo-container">
         <img src="https://github.com/calicaleb6531/RGProposalBuilder/blob/main/RGLogo.png?raw=true"
              onerror="this.onerror=null;this.src='https://placehold.co/200x60/87CEEB/ffffff?text=Your+Logo+Here';"
              alt="R & G Air Conditioning & Refrigeration Service Corp. Logo">
       </div>
 
-      <h1 class="text-3xl font-bold text-center text-gray-800 mb-6 uppercase tracking-wide keep-together">Proposal</h1>
+      <h1 class="text-3xl font-bold text-center text-gray-800 mb-6 uppercase tracking-wide">Proposal</h1>
 
-      <!-- Output Fields -->
-      <div class="text-sm text-gray-800 space-y-3">
-        <div class="row keep-together">
-          <p><strong>To:</strong> <span id="output-to"></span></p>
-          <p><strong>Date:</strong> <span id="output-date"></span></p>
-        </div>
-        <div class="keep-together">
+      <div class="text-sm text-gray-800 space-y-4">
+        <p><strong>To:</strong> <span id="output-to"></span></p>
+        <div class="pl-4 space-y-1">
           <p><span id="output-street-address"></span></p>
           <p><span id="output-city-state-zip"></span></p>
         </div>
-        <div class="row keep-together">
+        <div class="grid grid-cols-2 gap-4">
           <p><strong>Job Name:</strong> <span id="output-job-name"></span></p>
           <p><strong>Proposal No.:</strong> <span id="output-proposal-no"></span></p>
         </div>
-        <div class="row keep-together" style="margin-bottom: 4px;">
+        <div class="grid grid-cols-2 gap-4">
           <p><strong>Location:</strong> <span id="output-location"></span></p>
+          <p><strong>Date:</strong> <span id="output-date"></span></p>
         </div>
 
-        <div class="keep-together">
+        <div class="mt-6">
           <p>We hereby submit specifications and estimates for:</p>
-          <p>Our service proposal for the reference project. The detail of services covered under this proposal is described below.</p>
+          <p class="mt-2">Our service proposal for the reference project. The detail of services covered under this proposal is described below.</p>
         </div>
 
-        <div class="keep-together">
-          <p class="section-title">Scope of Services</p>
-          <p id="output-scope" class="whitespace-pre-wrap"></p>
+        <div class="mt-6">
+          <p class="font-bold text-center">Scope of Services</p>
+          <p id="output-scope" class="mt-2 whitespace-pre-wrap"></p>
         </div>
 
-        <div class="keep-together">
-          <p class="section-title">Project Description</p>
-          <ul id="output-description" class="list-disc list-inside"></ul>
+        <div class="mt-6">
+          <p class="font-bold text-center">Project Description</p>
+          <ul id="output-description" class="mt-2 list-disc list-inside"></ul>
         </div>
 
-        <div class="keep-together">
-          <p class="section-title">Warranty</p>
-          <p id="output-warranty" class="whitespace-pre-wrap"></p>
+        <div class="mt-6">
+          <p class="font-bold text-center">Warranty</p>
+          <p id="output-warranty" class="mt-2 whitespace-pre-wrap"></p>
         </div>
 
-        <div class="keep-together">
-          <p class="section-title">Pricing</p>
-          <div id="output-pricing-table" class="mt-2"></div>
-          <div class="thin-sep">
-            <div class="row"><span><strong>Subtotal:</strong></span><span id="output-subtotal"></span></div>
-            <div class="row"><span><strong>Sales Tax:</strong></span><span id="output-sales-tax"></span></div>
-            <div class="row" style="margin-top: 6px;"><span><strong>Total:</strong></span><span id="output-total"></span></div>
+        <div class="mt-6">
+          <p class="font-bold text-center">Pricing</p>
+          <div class="mt-2">
+            <div id="output-pricing-table" class="mt-4 border-b border-gray-300 pb-2"></div>
+            <div class="mt-4 pt-4 border-t border-gray-300">
+              <div class="flex justify-between font-bold">
+                <span>Subtotal:</span>
+                <span id="output-subtotal"></span>
+              </div>
+              <div class="flex justify-between font-bold">
+                <span>Sales Tax:</span>
+                <span id="output-sales-tax"></span>
+              </div>
+              <div class="flex justify-between font-bold text-lg mt-2 pt-2 border-t border-gray-300">
+                <span>Total:</span>
+                <span id="output-total"></span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="keep-together">
-          <p class="section-title">Payment Terms</p>
-          <p id="output-payment-terms" class="whitespace-pre-wrap"></p>
+        <div class="mt-6">
+          <p class="font-bold text-center">Payment Terms</p>
+          <p id="output-payment-terms" class="mt-2 whitespace-pre-wrap"></p>
         </div>
 
-        <p class="text-xs text-gray-500 italic keep-together">NOTE: This proposal may be withdrawn if not accepted within 30 days.</p>
+        <p class="text-xs text-gray-500 italic mt-6">NOTE: This proposal may be withdrawn if not accepted within 30 days.</p>
 
-        <div class="mt-4 pt-2 keep-together acceptance">
-          <p class="section-title" style="text-align:left;">ACCEPTANCE OF PROPOSAL</p>
-          <p class="text-gray-700">The prices, specifications, and conditions are satisfactory and hereby accepted. You are authorized to do the work as specified. Payment will be made as outlined above.</p>
+        <div class="mt-8 pt-4 border-t border-gray-300">
+          <h2 class="font-bold text-lg mb-4">ACCEPTANCE OF PROPOSAL</h2>
+          <p class="text-gray-700 text-sm">The prices, specifications, and conditions are satisfactory and hereby accepted. You are authorized to do the work as specified. Payment will be made as outlined above.</p>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-end" style="margin-top: 10px;">
+          <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
             <div class="flex flex-col space-y-2">
-              <p class="border-b border-gray-400 pb-1">Signature:</p>
+              <p class="mt-4 border-b border-gray-400 pb-1">Signature:</p>
               <p class="text-xs text-gray-500">_______________________________________________</p>
             </div>
             <div class="flex flex-col space-y-2">
-              <p class="border-b border-gray-400 pb-1">Date:</p>
+              <p class="mt-4 border-b border-gray-400 pb-1">Date:</p>
               <p class="text-xs text-gray-500">_______________________________________________</p>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Controls (never printed) -->
+      <!-- Buttons (hidden on print) -->
       <div class="flex justify-end space-x-4 mt-8 no-print">
         <button id="back-btn" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
           Back to Editor
@@ -288,7 +299,6 @@
     </div>
   </div>
 
-  <!-- Logic -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const proposalForm = document.getElementById('proposal-form');
@@ -361,21 +371,22 @@
         outputPaymentTerms.textContent = paymentTermsInput.value || 'N/A';
 
         outputDescriptionList.innerHTML = '';
-        const lines = descriptionInput.value.split('\n').filter(line => line.trim() !== '');
-        lines.forEach(line => {
+        const descriptionLines = descriptionInput.value.split('\n').filter(line => line.trim() !== '');
+        descriptionLines.forEach(line => {
           const li = document.createElement('li');
           li.textContent = line.trim();
           outputDescriptionList.appendChild(li);
         });
 
-        let subtotal = 0, taxableSubtotal = 0;
+        let subtotal = 0;
+        let taxableSubtotal = 0;
         outputPricingTable.innerHTML = '';
         const pricingItems = document.querySelectorAll('#pricing-inputs-container > div');
 
         pricingItems.forEach(itemDiv => {
           const descEl = itemDiv.querySelector('.pricing-description');
-          const amtEl  = itemDiv.querySelector('.pricing-amount');
-          const taxEl  = itemDiv.querySelector('.taxable-checkbox');
+          const amtEl = itemDiv.querySelector('.pricing-amount');
+          const taxEl = itemDiv.querySelector('.taxable-checkbox');
           const description = (descEl?.value || '').trim();
           const price = parseFloat(amtEl?.value);
           const isTaxable = !!taxEl?.checked;
@@ -383,9 +394,8 @@
           if (description && !isNaN(price)) {
             subtotal += price;
             if (isTaxable) taxableSubtotal += price;
-
             const row = document.createElement('div');
-            row.className = 'row';
+            row.className = 'flex justify-between py-1 border-b border-gray-100';
             row.innerHTML = `
               <span>${description}${isTaxable ? ' *' : ''}</span>
               <span>$${price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
