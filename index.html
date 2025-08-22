@@ -2,43 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>R & G Proposal Builder</title>
-
-  <!-- Tailwind CSS -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>R&G Proposal Builder</title>
   <script src="https://cdn.tailwindcss.com"></script>
-
   <style>
-    /* Screen base */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-    :root {
-      --print-body: 12.25px;    /* base print font */
-      --print-h1:   20px;       /* main title */
-      --print-h2:   14px;       /* section titles */
-      --print-gap:  10px;       /* vertical rhythm */
-    }
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f3f4f6;
-    }
-    .logo-container {
-      display: flex; justify-content: center; align-items: center;
-      margin-bottom: 2rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 1rem;
-    }
-    .logo-container img { max-width: 100%; height: auto; }
-
-    /* Strong print cleanup + better fitting layout */
     @page {
-      size: Letter;
-      margin: 0.75in; /* consistent margins; change if you want more/less content per page */
+      margin: 1in; /* 1-inch margins for printing */
     }
+
     @media print {
-      html, body { background: #fff !important; margin: 0 !important; padding: 0 !important; }
+      html, body {
+        background: #fff !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
 
-      /* Hide controls */
-      .no-print, .no-print * { display: none !important; }
+      /* Hide all buttons and elements with no-print */
+      .no-print, .no-print * {
+        display: none !important;
+      }
 
-      /* Remove all visual chrome */
+      /* Remove shadows, borders, rounded corners */
       *, *::before, *::after {
         box-shadow: none !important;
         border: none !important;
@@ -46,371 +30,141 @@
         background: transparent !important;
       }
 
-      /* Keep images visible */
-      img { background: transparent !important; }
-
-      /* Use full width inside page margins */
-      #app { max-width: none !important; width: auto !important; margin: 0 !important; padding: 0 !important; }
-
-      /* Printed document container: no padding/margins—@page handles whitespace */
+      /* Proposal container should be pure white and full width */
       #proposal-output {
         background: #fff !important;
-        padding: 0 !important; margin: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
       }
+    }
 
-      /* Typography & spacing tuned for print */
-      body { font-size: var(--print-body); line-height: 1.35; color: #111827; }
-      h1 { font-size: var(--print-h1) !important; margin: 0 0 calc(var(--print-gap) * 1.2) 0 !important; }
-      .section-title { font-size: var(--print-h2); font-weight: 700; text-align: center; margin: var(--print-gap) 0 6px 0; }
-      p, ul, li { margin: 0 0 6px 0; }
-      ul { padding-left: 16px; }
-      .row { display: flex; justify-content: space-between; gap: 12px; margin: 4px 0; }
+    /* Signature and date styling */
+    .signature-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid #000;
+    }
 
-      /* Reduce the logo area spacing in print */
-      .logo-container { border-bottom: 0 !important; padding-bottom: 6px !important; margin-bottom: 10px !important; }
+    .signature-line {
+      flex: 0 0 60%;
+      border-top: 1px solid #000;
+      height: 2px;
+    }
 
-      /* Prevent awkward page breaks inside key blocks */
-      .keep-together { break-inside: avoid; page-break-inside: avoid; -webkit-column-break-inside: avoid; }
-      .acceptance { break-inside: avoid; }
+    .signature-label {
+      margin-top: 0.5rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #000;
+    }
 
-      /* Trim extra separators in print */
-      .thin-sep { border-top: 1px solid #e5e7eb; margin-top: 8px; padding-top: 8px; }
+    .date-section {
+      flex: 0 0 30%;
+      text-align: center;
+    }
+
+    .date-line {
+      border-top: 1px solid #000;
+      height: 2px;
+    }
+
+    .date-label {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: #000;
     }
   </style>
 </head>
-<body class="bg-gray-100 min-h-screen p-4 flex items-center justify-center">
-  <div id="app" class="max-w-4xl w-full">
-    <!-- Editor (never printed) -->
-    <div id="proposal-form" class="bg-white p-8 rounded-lg shadow-xl border border-gray-200 no-print">
-      <div class="logo-container">
-        <img src="https://github.com/calicaleb6531/RGProposalBuilder/blob/main/RGLogo.png?raw=true"
-             onerror="this.onerror=null;this.src='https://placehold.co/200x60/87CEEB/ffffff?text=Your+Logo+Here';"
-             alt="R & G Air Conditioning & Refrigeration Service Corp. Logo">
-      </div>
-      <h1 class="text-3xl font-bold text-center text-gray-800 mb-6 uppercase tracking-wide">Proposal</h1>
-
-      <div class="space-y-6">
-        <!-- Client Info -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label for="to" class="block text-sm font-medium text-gray-700">To:</label>
-            <input type="text" id="to" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
-          </div>
-          <div>
-            <label for="date" class="block text-sm font-medium text-gray-700">Date:</label>
-            <input type="date" id="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
-          </div>
-        </div>
-
-        <!-- Address -->
-        <div>
-          <label for="street-address" class="block text-sm font-medium text-gray-700">Street Address:</label>
-          <input type="text" id="street-address" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div>
-            <label for="city" class="block text-sm font-medium text-gray-700">City:</label>
-            <input type="text" id="city" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
-          </div>
-          <div>
-            <label for="state" class="block text-sm font-medium text-gray-700">State:</label>
-            <input type="text" id="state" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
-          </div>
-          <div>
-            <label for="zip-code" class="block text-sm font-medium text-gray-700">Zip Code:</label>
-            <input type="text" id="zip-code" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
-          </div>
-        </div>
-
-        <!-- Job details -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label for="job-name" class="block text-sm font-medium text-gray-700">Job Name:</label>
-            <input type="text" id="job-name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
-          </div>
-          <div>
-            <label for="proposal-no" class="block text-sm font-medium text-gray-700">Proposal No.:</label>
-            <input type="text" id="proposal-no" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
-          </div>
-        </div>
-
-        <div>
-          <label for="location" class="block text-sm font-medium text-gray-700">Location:</label>
-          <input type="text" id="location" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
-        </div>
-
-        <div class="bg-gray-50 p-4 rounded-md border border-gray-200">
-          <p class="text-sm text-gray-600 italic">We hereby submit specifications and estimates for:</p>
-          <p class="text-sm text-gray-600 italic mt-2">Our service proposal for the reference project. The detail of services covered under this proposal is described below.</p>
-        </div>
-
-        <!-- Scope / Desc / Warranty -->
-        <div>
-          <label for="scope-of-services" class="block text-sm font-medium text-gray-700">Scope of Services:</label>
-          <textarea id="scope-of-services" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border"></textarea>
-        </div>
-        <div>
-          <label for="project-description" class="block text-sm font-medium text-gray-700">Project Description:</label>
-          <textarea id="project-description" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border" placeholder="Enter items on separate lines for bullet points..."></textarea>
-        </div>
-        <div>
-          <label for="warranty" class="block text-sm font-medium text-gray-700">Warranty:</label>
-          <textarea id="warranty" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border"></textarea>
-        </div>
-
-        <!-- Pricing -->
-        <div>
-          <p class="block text-sm font-medium text-gray-700">Pricing:</p>
-          <div id="pricing-inputs-container" class="space-y-2 mt-1">
-            <div class="flex items-center space-x-2">
-              <input type="text" class="pricing-description block w-1/2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border" placeholder="Item Description">
-              <input type="number" step="0.01" class="pricing-amount block w-1/4 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border" placeholder="Price">
-              <div class="flex items-center w-1/4">
-                <input type="checkbox" checked class="taxable-checkbox rounded text-blue-600 focus:ring-blue-500 mr-2">
-                <label class="text-sm text-gray-700">Taxable</label>
-              </div>
-            </div>
-          </div>
-          <button id="add-price-item-btn" type="button" class="mt-2 w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors duration-200">
-            Add Item
-          </button>
-        </div>
-
-        <div>
-          <label for="sales-tax" class="block text-sm font-medium text-gray-700">Sales Tax %:</label>
-          <input type="number" id="sales-tax" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border" value="11.5">
-        </div>
-
-        <div>
-          <label for="payment-terms" class="block text-sm font-medium text-gray-700">Payment Terms:</label>
-          <textarea id="payment-terms" rows="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">75% deposit upon signing; 25% upon completion.</textarea>
-        </div>
-
-        <p class="text-sm text-gray-600 italic">NOTE: This proposal may be withdrawn if not accepted within 30 days.</p>
-
-        <button id="generate-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg shadow-md transition-colors duration-200">
-          Generate Proposal
-        </button>
-      </div>
-    </div>
-
-    <!-- Output (printed) -->
-    <div id="proposal-output" class="hidden bg-white p-8 rounded-lg shadow-xl border border-gray-200">
-      <div class="logo-container keep-together">
-        <img src="https://github.com/calicaleb6531/RGProposalBuilder/blob/main/RGLogo.png?raw=true"
-             onerror="this.onerror=null;this.src='https://placehold.co/200x60/87CEEB/ffffff?text=Your+Logo+Here';"
-             alt="R & G Air Conditioning & Refrigeration Service Corp. Logo">
+<body class="bg-gray-100">
+  <div id="app" class="max-w-4xl mx-auto p-6">
+    <!-- Proposal Output -->
+    <div id="proposal-output" class="hidden bg-white rounded-lg shadow-lg p-8">
+      <!-- Header -->
+      <div class="text-center mb-6">
+        <img src="https://your-logo-url-here" alt="RG Air" class="mx-auto h-16">
+        <h1 class="text-2xl font-bold mt-2">Proposal</h1>
       </div>
 
-      <h1 class="text-3xl font-bold text-center text-gray-800 mb-6 uppercase tracking-wide keep-together">Proposal</h1>
+      <!-- Proposal Details -->
+      <div class="mb-6">
+        <p><strong>To:</strong> <span id="output-to"></span></p>
+        <p><strong>Street Address:</strong> <span id="output-street-address"></span></p>
+        <p><strong>City, State, ZIP:</strong> <span id="output-city-state-zip"></span></p>
+        <p><strong>Job Name:</strong> <span id="output-job-name"></span></p>
+        <p><strong>Proposal #:</strong> <span id="output-proposal-no"></span></p>
+        <p><strong>Location:</strong> <span id="output-location"></span></p>
+        <p><strong>Date:</strong> <span id="output-date"></span></p>
+      </div>
 
-      <!-- Output Fields -->
-      <div class="text-sm text-gray-800 space-y-3">
-        <div class="row keep-together">
-          <p><strong>To:</strong> <span id="output-to"></span></p>
-          <p><strong>Date:</strong> <span id="output-date"></span></p>
-        </div>
-        <div class="keep-together">
-          <p><span id="output-street-address"></span></p>
-          <p><span id="output-city-state-zip"></span></p>
-        </div>
-        <div class="row keep-together">
-          <p><strong>Job Name:</strong> <span id="output-job-name"></span></p>
-          <p><strong>Proposal No.:</strong> <span id="output-proposal-no"></span></p>
-        </div>
-        <div class="row keep-together" style="margin-bottom: 4px;">
-          <p><strong>Location:</strong> <span id="output-location"></span></p>
-        </div>
+      <!-- Scope & Description -->
+      <div class="mb-6">
+        <h2 class="font-bold text-lg mb-2">Scope of Work</h2>
+        <p id="output-scope"></p>
 
-        <div class="keep-together">
-          <p>We hereby submit specifications and estimates for:</p>
-          <p>Our service proposal for the reference project. The detail of services covered under this proposal is described below.</p>
+        <h2 class="font-bold text-lg mt-4 mb-2">Description</h2>
+        <ul id="output-description" class="list-disc ml-5"></ul>
+      </div>
+
+      <!-- Pricing Table -->
+      <div class="mb-6">
+        <h2 class="font-bold text-lg mb-2">Pricing</h2>
+        <div id="output-pricing-table" class="mb-4"></div>
+        <p><strong>Subtotal:</strong> <span id="output-subtotal"></span></p>
+        <p><strong>Sales Tax:</strong> <span id="output-sales-tax"></span></p>
+        <p class="font-bold text-xl mt-2"><strong>Total:</strong> <span id="output-total"></span></p>
+      </div>
+
+      <!-- Payment Terms -->
+      <div class="mb-6">
+        <h2 class="font-bold text-lg mb-2">Payment Terms</h2>
+        <p id="output-payment-terms"></p>
+      </div>
+
+      <!-- Signature & Date Section -->
+      <div class="signature-section">
+        <div class="signature">
+          <div class="signature-line"></div>
+          <div class="signature-label">Customer Signature</div>
         </div>
-
-        <div class="keep-together">
-          <p class="section-title">Scope of Services</p>
-          <p id="output-scope" class="whitespace-pre-wrap"></p>
-        </div>
-
-        <div class="keep-together">
-          <p class="section-title">Project Description</p>
-          <ul id="output-description" class="list-disc list-inside"></ul>
-        </div>
-
-        <div class="keep-together">
-          <p class="section-title">Warranty</p>
-          <p id="output-warranty" class="whitespace-pre-wrap"></p>
-        </div>
-
-        <div class="keep-together">
-          <p class="section-title">Pricing</p>
-          <div id="output-pricing-table" class="mt-2"></div>
-          <div class="thin-sep">
-            <div class="row"><span><strong>Subtotal:</strong></span><span id="output-subtotal"></span></div>
-            <div class="row"><span><strong>Sales Tax:</strong></span><span id="output-sales-tax"></span></div>
-            <div class="row" style="margin-top: 6px;"><span><strong>Total:</strong></span><span id="output-total"></span></div>
-          </div>
-        </div>
-
-        <div class="keep-together">
-          <p class="section-title">Payment Terms</p>
-          <p id="output-payment-terms" class="whitespace-pre-wrap"></p>
-        </div>
-
-        <p class="text-xs text-gray-500 italic keep-together">NOTE: This proposal may be withdrawn if not accepted within 30 days.</p>
-
-        <div class="mt-4 pt-2 keep-together acceptance">
-          <p class="section-title" style="text-align:left;">ACCEPTANCE OF PROPOSAL</p>
-          <p class="text-gray-700">The prices, specifications, and conditions are satisfactory and hereby accepted. You are authorized to do the work as specified. Payment will be made as outlined above.</p>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-end" style="margin-top: 10px;">
-            <div class="flex flex-col space-y-2">
-              <p class="border-b border-gray-400 pb-1">Signature:</p>
-              <p class="text-xs text-gray-500">_______________________________________________</p>
-            </div>
-            <div class="flex flex-col space-y-2">
-              <p class="border-b border-gray-400 pb-1">Date:</p>
-              <p class="text-xs text-gray-500">_______________________________________________</p>
-            </div>
-          </div>
+        <div class="date-section">
+          <div class="date-line"></div>
+          <div class="date-label">Date</div>
         </div>
       </div>
 
-      <!-- Controls (never printed) -->
+      <!-- Buttons -->
       <div class="flex justify-end space-x-4 mt-8 no-print">
-        <button id="back-btn" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
-          Back to Editor
-        </button>
-        <button id="print-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
-          Print Proposal
-        </button>
+        <button id="back-btn" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Back to Editor</button>
+        <button id="print-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Print Proposal</button>
       </div>
     </div>
   </div>
 
-  <!-- Logic -->
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const proposalForm = document.getElementById('proposal-form');
-      const proposalOutput = document.getElementById('proposal-output');
+    document.addEventListener("DOMContentLoaded", () => {
       const generateBtn = document.getElementById('generate-btn');
       const printBtn = document.getElementById('print-btn');
       const backBtn = document.getElementById('back-btn');
-
-      const toInput = document.getElementById('to');
-      const streetAddressInput = document.getElementById('street-address');
-      const cityInput = document.getElementById('city');
-      const stateInput = document.getElementById('state');
-      const zipCodeInput = document.getElementById('zip-code');
-      const jobNameInput = document.getElementById('job-name');
-      const proposalNoInput = document.getElementById('proposal-no');
-      const locationInput = document.getElementById('location');
+      const proposalForm = document.getElementById('proposal-form');
+      const proposalOutput = document.getElementById('proposal-output');
       const dateInput = document.getElementById('date');
-      const scopeInput = document.getElementById('scope-of-services');
-      const descriptionInput = document.getElementById('project-description');
-      const warrantyInput = document.getElementById('warranty');
-      const pricingInputsContainer = document.getElementById('pricing-inputs-container');
-      const addPriceItemBtn = document.getElementById('add-price-item-btn');
-      const salesTaxInput = document.getElementById('sales-tax');
-      const paymentTermsInput = document.getElementById('payment-terms');
-
-      const outputTo = document.getElementById('output-to');
-      const outputStreetAddress = document.getElementById('output-street-address');
-      const outputCityStateZip = document.getElementById('output-city-state-zip');
-      const outputJobName = document.getElementById('output-job-name');
-      const outputProposalNo = document.getElementById('output-proposal-no');
-      const outputLocation = document.getElementById('output-location');
       const outputDate = document.getElementById('output-date');
-      const outputScope = document.getElementById('output-scope');
-      const outputDescriptionList = document.getElementById('output-description');
-      const outputWarranty = document.getElementById('output-warranty');
-      const outputPricingTable = document.getElementById('output-pricing-table');
-      const outputSubtotal = document.getElementById('output-subtotal');
-      const outputSalesTax = document.getElementById('output-sales-tax');
-      const outputTotal = document.getElementById('output-total');
-      const outputPaymentTerms = document.getElementById('output-payment-terms');
 
       const today = new Date().toISOString().split('T')[0];
-      dateInput.value = today;
+      if (dateInput) dateInput.value = today;
 
-      function addPricingItem() {
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'flex items-center space-x-2';
-        itemDiv.innerHTML = `
-          <input type="text" class="pricing-description block w-1/2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border" placeholder="Item Description">
-          <input type="number" step="0.01" class="pricing-amount block w-1/4 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border" placeholder="Price">
-          <div class="flex items-center w-1/4">
-            <input type="checkbox" checked class="taxable-checkbox rounded text-blue-600 focus:ring-blue-500 mr-2">
-            <label class="text-sm text-gray-700">Taxable</label>
-          </div>
-        `;
-        pricingInputsContainer.appendChild(itemDiv);
+      if (printBtn) {
+        printBtn.addEventListener('click', () => window.print());
       }
-      addPriceItemBtn.addEventListener('click', addPricingItem);
-
-      generateBtn.addEventListener('click', () => {
-        outputTo.textContent = toInput.value || 'N/A';
-        outputStreetAddress.textContent = streetAddressInput.value || '';
-        outputCityStateZip.textContent = [cityInput.value, stateInput.value, zipCodeInput.value].filter(Boolean).join(', ') || '';
-        outputJobName.textContent = jobNameInput.value || 'N/A';
-        outputProposalNo.textContent = proposalNoInput.value || 'N/A';
-        outputLocation.textContent = locationInput.value || 'N/A';
-        outputDate.textContent = dateInput.value || 'N/A';
-        outputScope.textContent = scopeInput.value || 'N/A';
-        outputWarranty.textContent = warrantyInput.value || 'N/A';
-        outputPaymentTerms.textContent = paymentTermsInput.value || 'N/A';
-
-        outputDescriptionList.innerHTML = '';
-        const lines = descriptionInput.value.split('\n').filter(line => line.trim() !== '');
-        lines.forEach(line => {
-          const li = document.createElement('li');
-          li.textContent = line.trim();
-          outputDescriptionList.appendChild(li);
+      if (backBtn) {
+        backBtn.addEventListener('click', () => {
+          proposalOutput.classList.add('hidden');
+          proposalForm.classList.remove('hidden');
         });
-
-        let subtotal = 0, taxableSubtotal = 0;
-        outputPricingTable.innerHTML = '';
-        const pricingItems = document.querySelectorAll('#pricing-inputs-container > div');
-
-        pricingItems.forEach(itemDiv => {
-          const descEl = itemDiv.querySelector('.pricing-description');
-          const amtEl  = itemDiv.querySelector('.pricing-amount');
-          const taxEl  = itemDiv.querySelector('.taxable-checkbox');
-          const description = (descEl?.value || '').trim();
-          const price = parseFloat(amtEl?.value);
-          const isTaxable = !!taxEl?.checked;
-
-          if (description && !isNaN(price)) {
-            subtotal += price;
-            if (isTaxable) taxableSubtotal += price;
-
-            const row = document.createElement('div');
-            row.className = 'row';
-            row.innerHTML = `
-              <span>${description}${isTaxable ? ' *' : ''}</span>
-              <span>$${price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-            `;
-            outputPricingTable.appendChild(row);
-          }
-        });
-
-        const salesTaxRate = (parseFloat(salesTaxInput.value) || 0) / 100;
-        const salesTaxAmount = taxableSubtotal * salesTaxRate;
-        const total = subtotal + salesTaxAmount;
-
-        outputSubtotal.textContent = `$${subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-        outputSalesTax.textContent = `$${salesTaxAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-        outputTotal.textContent = `$${total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
-        proposalForm.classList.add('hidden');
-        proposalOutput.classList.remove('hidden');
-      });
-
-      printBtn.addEventListener('click', () => window.print());
-      backBtn.addEventListener('click', () => {
-        proposalOutput.classList.add('hidden');
-        proposalForm.classList.remove('hidden');
-      });
+      }
     });
   </script>
 </body>
