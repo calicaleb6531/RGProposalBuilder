@@ -9,76 +9,77 @@
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
-    /* Custom font */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f3f4f6;
+  /* Custom font */
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6;
+  }
+
+  /* Strongest possible print cleanup */
+  @page {
+    margin: .75in;
+    marks: none; /* 👈 This is the new line of code to hide the URL */
+  }
+  @media print {
+    html, body {
+      background: #fff !important;
+      margin: .75in !important;
+      padding: 0 !important;
     }
 
-    /* Strongest possible print cleanup */
-    @page {
-      margin: .75;
-    }
-    @media print {
-      html, body {
-        background: #fff !important;
-        margin: .75 !important;
-        padding: 0 !important;
-      }
-
-      /* Hide buttons and UI controls */
-      .no-print, .no-print * {
-        display: none !important;
-      }
-
-      /* Remove all backgrounds, shadows, and borders globally */
-      *, *::before, *::after {
-        box-shadow: none !important;
-        border: none !important;
-        border-radius: 0 !important;
-        background: transparent !important;
-      }
-
-      /* Force the printed content container to be pure white and full width */
-      #proposal-output {
-        background: #fff !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        box-shadow: none !important;
-        border: none !important;
-      }
-
-      /* Remove decorative logo separator */
-      .logo-container {
-        border-bottom: none !important;
-        padding-bottom: 0 !important;
-        margin-bottom: 1rem !important;
-      }
-
-      /* Ensure proposal takes full page width */
-      #app {
-        max-width: none !important;
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-      }
+    /* Hide buttons and UI controls */
+    .no-print, .no-print * {
+      display: none !important;
     }
 
-    /* Center the logo image */
+    /* Remove all backgrounds, shadows, and borders globally */
+    *, *::before, *::after {
+      box-shadow: none !important;
+      border: none !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+    }
+
+    /* Force the printed content container to be pure white and full width */
+    #proposal-output {
+      background: #fff !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      box-shadow: none !important;
+      border: none !important;
+    }
+
+    /* Remove decorative logo separator */
     .logo-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 2rem;
-      border-bottom: 1px solid #e5e7eb;
-      padding-bottom: 1rem;
+      border-bottom: none !important;
+      padding-bottom: 0 !important;
+      margin-bottom: 1rem !important;
     }
-    .logo-container img {
-      max-width: 100%;
-      height: auto;
+
+    /* Ensure proposal takes full page width */
+    #app {
+      max-width: none !important;
+      width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
     }
-  </style>
+  }
+
+  /* Center the logo image */
+  .logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 1rem;
+  }
+  .logo-container img {
+    max-width: 100%;
+    height: auto;
+  }
+</style>
 </head>
 <body class="bg-gray-100 min-h-screen p-4 flex items-center justify-center">
   <div id="app" class="max-w-4xl w-full">
@@ -425,4 +426,5 @@
   </script>
 </body>
 </html>
+
 
