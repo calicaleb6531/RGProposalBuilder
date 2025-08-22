@@ -15,11 +15,9 @@
         background: #fff !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
-        font-size: 12px !important;
-        line-height: 1.2 !important;
       }
 
-      /* Hide all buttons */
+      /* Hide all buttons and elements with no-print */
       .no-print, .no-print * {
         display: none !important;
       }
@@ -32,11 +30,11 @@
         background: transparent !important;
       }
 
-      /* Make proposal content take full width */
+      /* Proposal container should be pure white and full width */
       #proposal-output {
+        background: #fff !important;
         padding: 0 !important;
         margin: 0 !important;
-        background: #fff !important;
       }
     }
 
@@ -45,8 +43,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 1.5rem;
-      padding-top: 1rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
       border-top: 2px solid #000;
     }
 
@@ -59,7 +57,7 @@
     .signature-label {
       margin-top: 0.5rem;
       text-align: center;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: #000;
     }
 
@@ -75,49 +73,15 @@
 
     .date-label {
       margin-top: 0.5rem;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: #000;
     }
   </style>
 </head>
 <body class="bg-gray-100">
   <div id="app" class="max-w-4xl mx-auto p-6">
-
-    <!-- PROPOSAL FORM -->
-    <div id="proposal-form" class="bg-white rounded-lg shadow-lg p-6">
-      <h1 class="text-2xl font-bold mb-4">R&G Proposal Builder</h1>
-
-      <div class="grid grid-cols-2 gap-4">
-        <input id="to" placeholder="Client Name" class="border p-2 rounded" />
-        <input id="street-address" placeholder="Street Address" class="border p-2 rounded" />
-        <input id="city" placeholder="City" class="border p-2 rounded" />
-        <input id="state" placeholder="State" class="border p-2 rounded" />
-        <input id="zip-code" placeholder="Zip Code" class="border p-2 rounded" />
-        <input id="job-name" placeholder="Job Name" class="border p-2 rounded" />
-        <input id="proposal-no" placeholder="Proposal #" class="border p-2 rounded" />
-        <input id="location" placeholder="Location" class="border p-2 rounded" />
-        <input id="date" type="date" class="border p-2 rounded" />
-      </div>
-
-      <textarea id="scope" placeholder="Scope of Work" class="border p-2 rounded w-full mt-4"></textarea>
-      <textarea id="description" placeholder="Description (one item per line)" class="border p-2 rounded w-full mt-4"></textarea>
-
-      <div class="mt-4">
-        <label class="block font-semibold">Pricing Items</label>
-        <div id="pricing-inputs-container" class="space-y-2"></div>
-        <button id="add-price-item" class="bg-green-600 text-white px-3 py-1 rounded mt-2">+ Add Item</button>
-      </div>
-
-      <input id="sales-tax" type="number" step="0.01" placeholder="Sales Tax %" class="border p-2 rounded w-1/2 mt-4" />
-      <textarea id="payment-terms" placeholder="Payment Terms" class="border p-2 rounded w-full mt-4"></textarea>
-
-      <div class="flex justify-end space-x-4 mt-6">
-        <button id="generate-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Generate Proposal</button>
-      </div>
-    </div>
-
-    <!-- PROPOSAL OUTPUT -->
-    <div id="proposal-output" class="hidden bg-white rounded-lg shadow-lg p-8 mt-6">
+    <!-- Proposal Output -->
+    <div id="proposal-output" class="hidden bg-white rounded-lg shadow-lg p-8">
       <!-- Header -->
       <div class="text-center mb-6">
         <img src="https://your-logo-url-here" alt="RG Air" class="mx-auto h-16">
@@ -125,7 +89,7 @@
       </div>
 
       <!-- Proposal Details -->
-      <div class="mb-4">
+      <div class="mb-6">
         <p><strong>To:</strong> <span id="output-to"></span></p>
         <p><strong>Street Address:</strong> <span id="output-street-address"></span></p>
         <p><strong>City, State, ZIP:</strong> <span id="output-city-state-zip"></span></p>
@@ -136,7 +100,7 @@
       </div>
 
       <!-- Scope & Description -->
-      <div class="mb-4">
+      <div class="mb-6">
         <h2 class="font-bold text-lg mb-2">Scope of Work</h2>
         <p id="output-scope"></p>
 
@@ -145,16 +109,16 @@
       </div>
 
       <!-- Pricing Table -->
-      <div class="mb-4">
+      <div class="mb-6">
         <h2 class="font-bold text-lg mb-2">Pricing</h2>
-        <div id="output-pricing-table" class="mb-2"></div>
+        <div id="output-pricing-table" class="mb-4"></div>
         <p><strong>Subtotal:</strong> <span id="output-subtotal"></span></p>
         <p><strong>Sales Tax:</strong> <span id="output-sales-tax"></span></p>
-        <p class="font-bold text-lg mt-2"><strong>Total:</strong> <span id="output-total"></span></p>
+        <p class="font-bold text-xl mt-2"><strong>Total:</strong> <span id="output-total"></span></p>
       </div>
 
       <!-- Payment Terms -->
-      <div class="mb-4">
+      <div class="mb-6">
         <h2 class="font-bold text-lg mb-2">Payment Terms</h2>
         <p id="output-payment-terms"></p>
       </div>
@@ -181,127 +145,24 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const proposalForm = document.getElementById("proposal-form");
-      const proposalOutput = document.getElementById("proposal-output");
+      const generateBtn = document.getElementById('generate-btn');
+      const printBtn = document.getElementById('print-btn');
+      const backBtn = document.getElementById('back-btn');
+      const proposalForm = document.getElementById('proposal-form');
+      const proposalOutput = document.getElementById('proposal-output');
+      const dateInput = document.getElementById('date');
+      const outputDate = document.getElementById('output-date');
 
-      const generateBtn = document.getElementById("generate-btn");
-      const printBtn = document.getElementById("print-btn");
-      const backBtn = document.getElementById("back-btn");
-      const addPriceItemBtn = document.getElementById("add-price-item");
-      const pricingInputsContainer = document.getElementById("pricing-inputs-container");
-
-      const toInput = document.getElementById("to");
-      const streetAddressInput = document.getElementById("street-address");
-      const cityInput = document.getElementById("city");
-      const stateInput = document.getElementById("state");
-      const zipCodeInput = document.getElementById("zip-code");
-      const jobNameInput = document.getElementById("job-name");
-      const proposalNoInput = document.getElementById("proposal-no");
-      const locationInput = document.getElementById("location");
-      const dateInput = document.getElementById("date");
-      const scopeInput = document.getElementById("scope");
-      const descriptionInput = document.getElementById("description");
-      const salesTaxInput = document.getElementById("sales-tax");
-      const paymentTermsInput = document.getElementById("payment-terms");
-
-      const outputTo = document.getElementById("output-to");
-      const outputStreetAddress = document.getElementById("output-street-address");
-      const outputCityStateZip = document.getElementById("output-city-state-zip");
-      const outputJobName = document.getElementById("output-job-name");
-      const outputProposalNo = document.getElementById("output-proposal-no");
-      const outputLocation = document.getElementById("output-location");
-      const outputDate = document.getElementById("output-date");
-      const outputScope = document.getElementById("output-scope");
-      const outputDescriptionList = document.getElementById("output-description");
-      const outputPricingTable = document.getElementById("output-pricing-table");
-      const outputSubtotal = document.getElementById("output-subtotal");
-      const outputSalesTax = document.getElementById("output-sales-tax");
-      const outputTotal = document.getElementById("output-total");
-      const outputPaymentTerms = document.getElementById("output-payment-terms");
-
-      const today = new Date().toISOString().split("T")[0];
-      dateInput.value = today;
-
-      function addPricingItem() {
-        const itemDiv = document.createElement("div");
-        itemDiv.className = "flex items-center space-x-2";
-        itemDiv.innerHTML = `
-          <input type="text" class="pricing-description block w-1/2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border" placeholder="Item Description">
-          <input type="number" step="0.01" class="pricing-amount block w-1/4 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border" placeholder="Price">
-          <div class="flex items-center w-1/4">
-            <input type="checkbox" checked class="taxable-checkbox rounded text-blue-600 focus:ring-blue-500 mr-2">
-            <label class="text-sm text-gray-700">Taxable</label>
-          </div>
-        `;
-        pricingInputsContainer.appendChild(itemDiv);
-      }
-      addPriceItemBtn.addEventListener("click", addPricingItem);
-
-      generateBtn.addEventListener("click", () => {
-        outputTo.textContent = toInput.value || "N/A";
-        outputStreetAddress.textContent = streetAddressInput.value || "";
-        outputCityStateZip.textContent = [cityInput.value, stateInput.value, zipCodeInput.value].filter(Boolean).join(", ") || "";
-        outputJobName.textContent = jobNameInput.value || "N/A";
-        outputProposalNo.textContent = proposalNoInput.value || "N/A";
-        outputLocation.textContent = locationInput.value || "N/A";
-        outputDate.textContent = dateInput.value || "N/A";
-        outputScope.textContent = scopeInput.value || "N/A";
-        outputPaymentTerms.textContent = paymentTermsInput.value || "N/A";
-
-        outputDescriptionList.innerHTML = "";
-        const descriptionLines = descriptionInput.value.split("\n").filter(line => line.trim() !== "");
-        descriptionLines.forEach(line => {
-          const li = document.createElement("li");
-          li.textContent = line.trim();
-          outputDescriptionList.appendChild(li);
-        });
-
-        let subtotal = 0;
-        let taxableSubtotal = 0;
-        outputPricingTable.innerHTML = "";
-        const pricingItems = document.querySelectorAll("#pricing-inputs-container > div");
-
-        pricingItems.forEach(itemDiv => {
-          const descEl = itemDiv.querySelector(".pricing-description");
-          const amtEl = itemDiv.querySelector(".pricing-amount");
-          const taxEl = itemDiv.querySelector(".taxable-checkbox");
-          const description = (descEl?.value || "").trim();
-          const price = parseFloat(amtEl?.value);
-          const isTaxable = !!taxEl?.checked;
-
-          if (description && !isNaN(price)) {
-            subtotal += price;
-            if (isTaxable) taxableSubtotal += price;
-            const row = document.createElement("div");
-            row.className = "flex justify-between py-1 border-b border-gray-100";
-            row.innerHTML = `
-              <span>${description}${isTaxable ? " *" : ""}</span>
-              <span>$${price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-            `;
-            outputPricingTable.appendChild(row);
-          }
-        });
-
-        const salesTaxRate = (parseFloat(salesTaxInput.value) || 0) / 100;
-        const salesTaxAmount = taxableSubtotal * salesTaxRate;
-        const total = subtotal + salesTaxAmount;
-
-        outputSubtotal.textContent = `$${subtotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-        outputSalesTax.textContent = `$${salesTaxAmount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-        outputTotal.textContent = `$${total.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
-        proposalForm.classList.add("hidden");
-        proposalOutput.classList.remove("hidden");
-      });
+      const today = new Date().toISOString().split('T')[0];
+      if (dateInput) dateInput.value = today;
 
       if (printBtn) {
-        printBtn.addEventListener("click", () => window.print());
+        printBtn.addEventListener('click', () => window.print());
       }
-
       if (backBtn) {
-        backBtn.addEventListener("click", () => {
-          proposalOutput.classList.add("hidden");
-          proposalForm.classList.remove("hidden");
+        backBtn.addEventListener('click', () => {
+          proposalOutput.classList.add('hidden');
+          proposalForm.classList.remove('hidden');
         });
       }
     });
