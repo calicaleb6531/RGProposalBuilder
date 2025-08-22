@@ -1,430 +1,854 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>R & G Proposal Builder</title>
 
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
 
-  <style>
-  /* Custom font */
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-  body {
-    font-family: 'Inter', sans-serif;
-    background-color: #f3f4f6;
-  }
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  /* Strongest possible print cleanup */
-  @page {
-    margin: .75in;
-    marks: none; /* 👈 This is the new line of code to hide the URL */
-  }
-  @media print {
-    html, body {
-      background: #fff !important;
-      margin: .75in !important;
-      padding: 0 !important;
-    }
+  <title>R & G Proposal Builder</title>
 
-    /* Hide buttons and UI controls */
-    .no-print, .no-print * {
-      display: none !important;
-    }
 
-    /* Remove all backgrounds, shadows, and borders globally */
-    *, *::before, *::after {
-      box-shadow: none !important;
-      border: none !important;
-      border-radius: 0 !important;
-      background: transparent !important;
-    }
 
-    /* Force the printed content container to be pure white and full width */
-    #proposal-output {
-      background: #fff !important;
-      padding: 0 !important;
-      margin: 0 !important;
-      box-shadow: none !important;
-      border: none !important;
-    }
+  <!-- Tailwind CSS -->
 
-    /* Remove decorative logo separator */
-    .logo-container {
-      border-bottom: none !important;
-      padding-bottom: 0 !important;
-      margin-bottom: 1rem !important;
-    }
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    /* Ensure proposal takes full page width */
-    #app {
-      max-width: none !important;
-      width: 100% !important;
-      margin: 0 !important;
-      padding: 0 !important;
-    }
-  }
 
-  /* Center the logo image */
-  .logo-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 2rem;
-    border-bottom: 1px solid #e5e7eb;
-    padding-bottom: 1rem;
-  }
-  .logo-container img {
-    max-width: 100%;
-    height: auto;
-  }
-</style>
+
+  <style>
+
+    /* Custom font */
+
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+    body {
+
+      font-family: 'Inter', sans-serif;
+
+      background-color: #f3f4f6;
+
+    }
+
+
+
+    /* Strongest possible print cleanup */
+
+    @page {
+
+      margin: .75;
+
+    }
+
+    @media print {
+
+      html, body {
+
+        background: #fff !important;
+
+        margin: .75 !important;
+
+        padding: 0 !important;
+
+      }
+
+
+
+      /* Hide buttons and UI controls */
+
+      .no-print, .no-print * {
+
+        display: none !important;
+
+      }
+
+
+
+      /* Remove all backgrounds, shadows, and borders globally */
+
+      *, *::before, *::after {
+
+        box-shadow: none !important;
+
+        border: none !important;
+
+        border-radius: 0 !important;
+
+        background: transparent !important;
+
+      }
+
+
+
+      /* Force the printed content container to be pure white and full width */
+
+      #proposal-output {
+
+        background: #fff !important;
+
+        padding: 0 !important;
+
+        margin: 0 !important;
+
+        box-shadow: none !important;
+
+        border: none !important;
+
+      }
+
+
+
+      /* Remove decorative logo separator */
+
+      .logo-container {
+
+        border-bottom: none !important;
+
+        padding-bottom: 0 !important;
+
+        margin-bottom: 1rem !important;
+
+      }
+
+
+
+      /* Ensure proposal takes full page width */
+
+      #app {
+
+        max-width: none !important;
+
+        width: 100% !important;
+
+        margin: 0 !important;
+
+        padding: 0 !important;
+
+      }
+
+    }
+
+
+
+    /* Center the logo image */
+
+    .logo-container {
+
+      display: flex;
+
+      justify-content: center;
+
+      align-items: center;
+
+      margin-bottom: 2rem;
+
+      border-bottom: 1px solid #e5e7eb;
+
+      padding-bottom: 1rem;
+
+    }
+
+    .logo-container img {
+
+      max-width: 100%;
+
+      height: auto;
+
+    }
+
+  </style>
+
 </head>
+
 <body class="bg-gray-100 min-h-screen p-4 flex items-center justify-center">
-  <div id="app" class="max-w-4xl w-full">
 
-    <!-- Form Section -->
-    <div id="proposal-form" class="bg-white p-8 rounded-lg shadow-xl border border-gray-200 no-print">
-      <div class="logo-container">
-        <img src="https://github.com/calicaleb6531/RGProposalBuilder/blob/main/RGLogo.png?raw=true"
-             onerror="this.onerror=null;this.src='https://placehold.co/200x60/87CEEB/ffffff?text=Your+Logo+Here';"
-             alt="R & G Air Conditioning & Refrigeration Service Corp. Logo">
-      </div>
+  <div id="app" class="max-w-4xl w-full">
 
-      <h1 class="text-3xl font-bold text-center text-gray-800 mb-6 uppercase tracking-wide">Proposal</h1>
 
-      <!-- Input Fields -->
-      <div class="space-y-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label for="to" class="block text-sm font-medium text-gray-700">To:</label>
-            <input type="text" id="to" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
-          </div>
-          <div>
-            <label for="date" class="block text-sm font-medium text-gray-700">Date:</label>
-            <input type="date" id="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
-          </div>
-        </div>
 
-        <div>
-          <label for="street-address" class="block text-sm font-medium text-gray-700">Street Address:</label>
-          <input type="text" id="street-address" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
-        </div>
+    <!-- Form Section -->
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div>
-            <label for="city" class="block text-sm font-medium text-gray-700">City:</label>
-            <input type="text" id="city" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
-          </div>
-          <div>
-            <label for="state" class="block text-sm font-medium text-gray-700">State:</label>
-            <input type="text" id="state" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
-          </div>
-          <div>
-            <label for="zip-code" class="block text-sm font-medium text-gray-700">Zip Code:</label>
-            <input type="text" id="zip-code" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
-          </div>
-        </div>
+    <div id="proposal-form" class="bg-white p-8 rounded-lg shadow-xl border border-gray-200 no-print">
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label for="job-name" class="block text-sm font-medium text-gray-700">Job Name:</label>
-            <input type="text" id="job-name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
-          </div>
-          <div>
-            <label for="proposal-no" class="block text-sm font-medium text-gray-700">Proposal No.:</label>
-            <input type="text" id="proposal-no" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
-          </div>
-        </div>
+      <div class="logo-container">
 
-        <div>
-          <label for="location" class="block text-sm font-medium text-gray-700">Location:</label>
-          <input type="text" id="location" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
-        </div>
+        <img src="https://github.com/calicaleb6531/RGProposalBuilder/blob/main/RGLogo.png?raw=true"
 
-        <div class="bg-gray-50 p-4 rounded-md border border-gray-200">
-          <p class="text-sm text-gray-600 italic">We hereby submit specifications and estimates for:</p>
-          <p class="text-sm text-gray-600 italic mt-2">Our service proposal for the reference project. The detail of services covered under this proposal is described below.</p>
-        </div>
+             onerror="this.onerror=null;this.src='https://placehold.co/200x60/87CEEB/ffffff?text=Your+Logo+Here';"
 
-        <div>
-          <label for="scope-of-services" class="block text-sm font-medium text-gray-700">Scope of Services:</label>
-          <textarea id="scope-of-services" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border"></textarea>
-        </div>
+             alt="R & G Air Conditioning & Refrigeration Service Corp. Logo">
 
-        <div>
-          <label for="project-description" class="block text-sm font-medium text-gray-700">Project Description:</label>
-          <textarea id="project-description" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border" placeholder="Enter items on separate lines for bullet points..."></textarea>
-        </div>
+      </div>
 
-        <div>
-          <label for="warranty" class="block text-sm font-medium text-gray-700">Warranty:</label>
-          <textarea id="warranty" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border"></textarea>
-        </div>
 
-        <div>
-          <p class="block text-sm font-medium text-gray-700">Pricing:</p>
-          <div id="pricing-inputs-container" class="space-y-2 mt-1">
-            <div class="flex items-center space-x-2">
-              <input type="text" class="pricing-description block w-1/2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border" placeholder="Item Description">
-              <input type="number" step="0.01" class="pricing-amount block w-1/4 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border" placeholder="Price">
-              <div class="flex items-center w-1/4">
-                <input type="checkbox" checked class="taxable-checkbox rounded text-blue-600 focus:ring-blue-500 mr-2">
-                <label class="text-sm text-gray-700">Taxable</label>
-              </div>
-            </div>
-          </div>
-          <button id="add-price-item-btn" type="button" class="mt-2 w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors duration-200">
-            Add Item
-          </button>
-        </div>
 
-        <div>
-          <label for="sales-tax" class="block text-sm font-medium text-gray-700">Sales Tax %:</label>
-          <input type="number" id="sales-tax" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border" value="11.5">
-        </div>
+      <h1 class="text-3xl font-bold text-center text-gray-800 mb-6 uppercase tracking-wide">Proposal</h1>
 
-        <div>
-          <label for="payment-terms" class="block text-sm font-medium text-gray-700">Payment Terms:</label>
-          <textarea id="payment-terms" rows="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">75% deposit upon signing; 25% upon completion.</textarea>
-        </div>
 
-        <p class="text-sm text-gray-600 italic">NOTE: This proposal may be withdrawn if not accepted within 30 days.</p>
 
-        <button id="generate-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg shadow-md transition-colors duration-200">
-          Generate Proposal
-        </button>
-      </div>
-    </div>
+      <!-- Input Fields -->
 
-    <!-- Output Section -->
-    <div id="proposal-output" class="hidden bg-white p-8 rounded-lg shadow-xl border border-gray-200 proposal-output-container">
-      <div class="logo-container">
-        <img src="https://github.com/calicaleb6531/RGProposalBuilder/blob/main/RGLogo.png?raw=true"
-             onerror="this.onerror=null;this.src='https://placehold.co/200x60/87CEEB/ffffff?text=Your+Logo+Here';"
-             alt="R & G Air Conditioning & Refrigeration Service Corp. Logo">
-      </div>
+      <div class="space-y-6">
 
-      <h1 class="text-3xl font-bold text-center text-gray-800 mb-6 uppercase tracking-wide">Proposal</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-      <div class="text-sm text-gray-800 space-y-4">
-        <p><strong>To:</strong> <span id="output-to"></span></p>
-        <div class="pl-4 space-y-1">
-          <p><span id="output-street-address"></span></p>
-          <p><span id="output-city-state-zip"></span></p>
-        </div>
-        <div class="grid grid-cols-2 gap-4">
-          <p><strong>Job Name:</strong> <span id="output-job-name"></span></p>
-          <p><strong>Proposal No.:</strong> <span id="output-proposal-no"></span></p>
-        </div>
-        <div class="grid grid-cols-2 gap-4">
-          <p><strong>Location:</strong> <span id="output-location"></span></p>
-          <p><strong>Date:</strong> <span id="output-date"></span></p>
-        </div>
+          <div>
 
-        <div class="mt-6">
-          <p>We hereby submit specifications and estimates for:</p>
-          <p class="mt-2">Our service proposal for the reference project. The detail of services covered under this proposal is described below.</p>
-        </div>
+            <label for="to" class="block text-sm font-medium text-gray-700">To:</label>
 
-        <div class="mt-6">
-          <p class="font-bold text-center">Scope of Services</p>
-          <p id="output-scope" class="mt-2 whitespace-pre-wrap"></p>
-        </div>
+            <input type="text" id="to" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
 
-        <div class="mt-6">
-          <p class="font-bold text-center">Project Description</p>
-          <ul id="output-description" class="mt-2 list-disc list-inside"></ul>
-        </div>
+          </div>
 
-        <div class="mt-6">
-          <p class="font-bold text-center">Warranty</p>
-          <p id="output-warranty" class="mt-2 whitespace-pre-wrap"></p>
-        </div>
+          <div>
 
-        <div class="mt-6">
-          <p class="font-bold text-center">Pricing</p>
-          <div class="mt-2">
-            <div id="output-pricing-table" class="mt-4 border-b border-gray-300 pb-2"></div>
-            <div class="mt-4 pt-4 border-t border-gray-300">
-              <div class="flex justify-between font-bold">
-                <span>Subtotal:</span>
-                <span id="output-subtotal"></span>
-              </div>
-              <div class="flex justify-between font-bold">
-                <span>Sales Tax:</span>
-                <span id="output-sales-tax"></span>
-              </div>
-              <div class="flex justify-between font-bold text-lg mt-2 pt-2 border-t border-gray-300">
-                <span>Total:</span>
-                <span id="output-total"></span>
-              </div>
-            </div>
-          </div>
-        </div>
+            <label for="date" class="block text-sm font-medium text-gray-700">Date:</label>
 
-        <div class="mt-6">
-          <p class="font-bold text-center">Payment Terms</p>
-          <p id="output-payment-terms" class="mt-2 whitespace-pre-wrap"></p>
-        </div>
+            <input type="date" id="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
 
-        <p class="text-xs text-gray-500 italic mt-6">NOTE: This proposal may be withdrawn if not accepted within 30 days.</p>
+          </div>
 
-        <div class="mt-8 pt-4 border-t border-gray-300">
-          <h2 class="font-bold text-lg mb-4">ACCEPTANCE OF PROPOSAL</h2>
-          <p class="text-gray-700 text-sm">The prices, specifications, and conditions are satisfactory and hereby accepted. You are authorized to do the work as specified. Payment will be made as outlined above.</p>
+        </div>
 
-          <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
-            <div class="flex flex-col space-y-2">
-              <p class="mt-4 border-b border-gray-400 pb-1">Signature:</p>
-              <p class="text-xs text-gray-500">_______________________________________________</p>
-            </div>
-            <div class="flex flex-col space-y-2">
-              <p class="mt-4 border-b border-gray-400 pb-1">Date:</p>
-              <p class="text-xs text-gray-500">_______________________________________________</p>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <!-- Buttons (hidden on print) -->
-      <div class="flex justify-end space-x-4 mt-8 no-print">
-        <button id="back-btn" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
-          Back to Editor
-        </button>
-        <button id="print-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
-          Print Proposal
-        </button>
-      </div>
-    </div>
-  </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const proposalForm = document.getElementById('proposal-form');
-      const proposalOutput = document.getElementById('proposal-output');
-      const generateBtn = document.getElementById('generate-btn');
-      const printBtn = document.getElementById('print-btn');
-      const backBtn = document.getElementById('back-btn');
+        <div>
 
-      const toInput = document.getElementById('to');
-      const streetAddressInput = document.getElementById('street-address');
-      const cityInput = document.getElementById('city');
-      const stateInput = document.getElementById('state');
-      const zipCodeInput = document.getElementById('zip-code');
-      const jobNameInput = document.getElementById('job-name');
-      const proposalNoInput = document.getElementById('proposal-no');
-      const locationInput = document.getElementById('location');
-      const dateInput = document.getElementById('date');
-      const scopeInput = document.getElementById('scope-of-services');
-      const descriptionInput = document.getElementById('project-description');
-      const warrantyInput = document.getElementById('warranty');
-      const pricingInputsContainer = document.getElementById('pricing-inputs-container');
-      const addPriceItemBtn = document.getElementById('add-price-item-btn');
-      const salesTaxInput = document.getElementById('sales-tax');
-      const paymentTermsInput = document.getElementById('payment-terms');
+          <label for="street-address" class="block text-sm font-medium text-gray-700">Street Address:</label>
 
-      const outputTo = document.getElementById('output-to');
-      const outputStreetAddress = document.getElementById('output-street-address');
-      const outputCityStateZip = document.getElementById('output-city-state-zip');
-      const outputJobName = document.getElementById('output-job-name');
-      const outputProposalNo = document.getElementById('output-proposal-no');
-      const outputLocation = document.getElementById('output-location');
-      const outputDate = document.getElementById('output-date');
-      const outputScope = document.getElementById('output-scope');
-      const outputDescriptionList = document.getElementById('output-description');
-      const outputWarranty = document.getElementById('output-warranty');
-      const outputPricingTable = document.getElementById('output-pricing-table');
-      const outputSubtotal = document.getElementById('output-subtotal');
-      const outputSalesTax = document.getElementById('output-sales-tax');
-      const outputTotal = document.getElementById('output-total');
-      const outputPaymentTerms = document.getElementById('output-payment-terms');
+          <input type="text" id="street-address" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
 
-      const today = new Date().toISOString().split('T')[0];
-      dateInput.value = today;
+        </div>
 
-      function addPricingItem() {
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'flex items-center space-x-2';
-        itemDiv.innerHTML = `
-          <input type="text" class="pricing-description block w-1/2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border" placeholder="Item Description">
-          <input type="number" step="0.01" class="pricing-amount block w-1/4 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border" placeholder="Price">
-          <div class="flex items-center w-1/4">
-            <input type="checkbox" checked class="taxable-checkbox rounded text-blue-600 focus:ring-blue-500 mr-2">
-            <label class="text-sm text-gray-700">Taxable</label>
-          </div>
-        `;
-        pricingInputsContainer.appendChild(itemDiv);
-      }
-      addPriceItemBtn.addEventListener('click', addPricingItem);
 
-      generateBtn.addEventListener('click', () => {
-        outputTo.textContent = toInput.value || 'N/A';
-        outputStreetAddress.textContent = streetAddressInput.value || '';
-        outputCityStateZip.textContent = [cityInput.value, stateInput.value, zipCodeInput.value].filter(Boolean).join(', ') || '';
-        outputJobName.textContent = jobNameInput.value || 'N/A';
-        outputProposalNo.textContent = proposalNoInput.value || 'N/A';
-        outputLocation.textContent = locationInput.value || 'N/A';
-        outputDate.textContent = dateInput.value || 'N/A';
-        outputScope.textContent = scopeInput.value || 'N/A';
-        outputWarranty.textContent = warrantyInput.value || 'N/A';
-        outputPaymentTerms.textContent = paymentTermsInput.value || 'N/A';
 
-        outputDescriptionList.innerHTML = '';
-        const descriptionLines = descriptionInput.value.split('\n').filter(line => line.trim() !== '');
-        descriptionLines.forEach(line => {
-          const li = document.createElement('li');
-          li.textContent = line.trim();
-          outputDescriptionList.appendChild(li);
-        });
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-        let subtotal = 0;
-        let taxableSubtotal = 0;
-        outputPricingTable.innerHTML = '';
-        const pricingItems = document.querySelectorAll('#pricing-inputs-container > div');
+          <div>
 
-        pricingItems.forEach(itemDiv => {
-          const descEl = itemDiv.querySelector('.pricing-description');
-          const amtEl = itemDiv.querySelector('.pricing-amount');
-          const taxEl = itemDiv.querySelector('.taxable-checkbox');
-          const description = (descEl?.value || '').trim();
-          const price = parseFloat(amtEl?.value);
-          const isTaxable = !!taxEl?.checked;
+            <label for="city" class="block text-sm font-medium text-gray-700">City:</label>
 
-          if (description && !isNaN(price)) {
-            subtotal += price;
-            if (isTaxable) taxableSubtotal += price;
-            const row = document.createElement('div');
-            row.className = 'flex justify-between py-1 border-b border-gray-100';
-            row.innerHTML = `
-              <span>${description}${isTaxable ? ' *' : ''}</span>
-              <span>$${price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-            `;
-            outputPricingTable.appendChild(row);
-          }
-        });
+            <input type="text" id="city" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
 
-        const salesTaxRate = (parseFloat(salesTaxInput.value) || 0) / 100;
-        const salesTaxAmount = taxableSubtotal * salesTaxRate;
-        const total = subtotal + salesTaxAmount;
+          </div>
 
-        outputSubtotal.textContent = `$${subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-        outputSalesTax.textContent = `$${salesTaxAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-        outputTotal.textContent = `$${total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+          <div>
 
-        proposalForm.classList.add('hidden');
-        proposalOutput.classList.remove('hidden');
-      });
+            <label for="state" class="block text-sm font-medium text-gray-700">State:</label>
 
-      printBtn.addEventListener('click', () => window.print());
-      backBtn.addEventListener('click', () => {
-        proposalOutput.classList.add('hidden');
-        proposalForm.classList.remove('hidden');
-      });
-    });
-  </script>
+            <input type="text" id="state" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
+
+          </div>
+
+          <div>
+
+            <label for="zip-code" class="block text-sm font-medium text-gray-700">Zip Code:</label>
+
+            <input type="text" id="zip-code" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
+
+          </div>
+
+        </div>
+
+
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <div>
+
+            <label for="job-name" class="block text-sm font-medium text-gray-700">Job Name:</label>
+
+            <input type="text" id="job-name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
+
+          </div>
+
+          <div>
+
+            <label for="proposal-no" class="block text-sm font-medium text-gray-700">Proposal No.:</label>
+
+            <input type="text" id="proposal-no" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
+
+          </div>
+
+        </div>
+
+
+
+        <div>
+
+          <label for="location" class="block text-sm font-medium text-gray-700">Location:</label>
+
+          <input type="text" id="location" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
+
+        </div>
+
+
+
+        <div class="bg-gray-50 p-4 rounded-md border border-gray-200">
+
+          <p class="text-sm text-gray-600 italic">We hereby submit specifications and estimates for:</p>
+
+          <p class="text-sm text-gray-600 italic mt-2">Our service proposal for the reference project. The detail of services covered under this proposal is described below.</p>
+
+        </div>
+
+
+
+        <div>
+
+          <label for="scope-of-services" class="block text-sm font-medium text-gray-700">Scope of Services:</label>
+
+          <textarea id="scope-of-services" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border"></textarea>
+
+        </div>
+
+
+
+        <div>
+
+          <label for="project-description" class="block text-sm font-medium text-gray-700">Project Description:</label>
+
+          <textarea id="project-description" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border" placeholder="Enter items on separate lines for bullet points..."></textarea>
+
+        </div>
+
+
+
+        <div>
+
+          <label for="warranty" class="block text-sm font-medium text-gray-700">Warranty:</label>
+
+          <textarea id="warranty" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border"></textarea>
+
+        </div>
+
+
+
+        <div>
+
+          <p class="block text-sm font-medium text-gray-700">Pricing:</p>
+
+          <div id="pricing-inputs-container" class="space-y-2 mt-1">
+
+            <div class="flex items-center space-x-2">
+
+              <input type="text" class="pricing-description block w-1/2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border" placeholder="Item Description">
+
+              <input type="number" step="0.01" class="pricing-amount block w-1/4 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border" placeholder="Price">
+
+              <div class="flex items-center w-1/4">
+
+                <input type="checkbox" checked class="taxable-checkbox rounded text-blue-600 focus:ring-blue-500 mr-2">
+
+                <label class="text-sm text-gray-700">Taxable</label>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <button id="add-price-item-btn" type="button" class="mt-2 w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors duration-200">
+
+            Add Item
+
+          </button>
+
+        </div>
+
+
+
+        <div>
+
+          <label for="sales-tax" class="block text-sm font-medium text-gray-700">Sales Tax %:</label>
+
+          <input type="number" id="sales-tax" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border" value="11.5">
+
+        </div>
+
+
+
+        <div>
+
+          <label for="payment-terms" class="block text-sm font-medium text-gray-700">Payment Terms:</label>
+
+          <textarea id="payment-terms" rows="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">75% deposit upon signing; 25% upon completion.</textarea>
+
+        </div>
+
+
+
+        <p class="text-sm text-gray-600 italic">NOTE: This proposal may be withdrawn if not accepted within 30 days.</p>
+
+
+
+        <button id="generate-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg shadow-md transition-colors duration-200">
+
+          Generate Proposal
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- Output Section -->
+
+    <div id="proposal-output" class="hidden bg-white p-8 rounded-lg shadow-xl border border-gray-200 proposal-output-container">
+
+      <div class="logo-container">
+
+        <img src="https://github.com/calicaleb6531/RGProposalBuilder/blob/main/RGLogo.png?raw=true"
+
+             onerror="this.onerror=null;this.src='https://placehold.co/200x60/87CEEB/ffffff?text=Your+Logo+Here';"
+
+             alt="R & G Air Conditioning & Refrigeration Service Corp. Logo">
+
+      </div>
+
+
+
+      <h1 class="text-3xl font-bold text-center text-gray-800 mb-6 uppercase tracking-wide">Proposal</h1>
+
+
+
+      <div class="text-sm text-gray-800 space-y-4">
+
+        <p><strong>To:</strong> <span id="output-to"></span></p>
+
+        <div class="pl-4 space-y-1">
+
+          <p><span id="output-street-address"></span></p>
+
+          <p><span id="output-city-state-zip"></span></p>
+
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+
+          <p><strong>Job Name:</strong> <span id="output-job-name"></span></p>
+
+          <p><strong>Proposal No.:</strong> <span id="output-proposal-no"></span></p>
+
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+
+          <p><strong>Location:</strong> <span id="output-location"></span></p>
+
+          <p><strong>Date:</strong> <span id="output-date"></span></p>
+
+        </div>
+
+
+
+        <div class="mt-6">
+
+          <p>We hereby submit specifications and estimates for:</p>
+
+          <p class="mt-2">Our service proposal for the reference project. The detail of services covered under this proposal is described below.</p>
+
+        </div>
+
+
+
+        <div class="mt-6">
+
+          <p class="font-bold text-center">Scope of Services</p>
+
+          <p id="output-scope" class="mt-2 whitespace-pre-wrap"></p>
+
+        </div>
+
+
+
+        <div class="mt-6">
+
+          <p class="font-bold text-center">Project Description</p>
+
+          <ul id="output-description" class="mt-2 list-disc list-inside"></ul>
+
+        </div>
+
+
+
+        <div class="mt-6">
+
+          <p class="font-bold text-center">Warranty</p>
+
+          <p id="output-warranty" class="mt-2 whitespace-pre-wrap"></p>
+
+        </div>
+
+
+
+        <div class="mt-6">
+
+          <p class="font-bold text-center">Pricing</p>
+
+          <div class="mt-2">
+
+            <div id="output-pricing-table" class="mt-4 border-b border-gray-300 pb-2"></div>
+
+            <div class="mt-4 pt-4 border-t border-gray-300">
+
+              <div class="flex justify-between font-bold">
+
+                <span>Subtotal:</span>
+
+                <span id="output-subtotal"></span>
+
+              </div>
+
+              <div class="flex justify-between font-bold">
+
+                <span>Sales Tax:</span>
+
+                <span id="output-sales-tax"></span>
+
+              </div>
+
+              <div class="flex justify-between font-bold text-lg mt-2 pt-2 border-t border-gray-300">
+
+                <span>Total:</span>
+
+                <span id="output-total"></span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+        <div class="mt-6">
+
+          <p class="font-bold text-center">Payment Terms</p>
+
+          <p id="output-payment-terms" class="mt-2 whitespace-pre-wrap"></p>
+
+        </div>
+
+
+
+        <p class="text-xs text-gray-500 italic mt-6">NOTE: This proposal may be withdrawn if not accepted within 30 days.</p>
+
+
+
+        <div class="mt-8 pt-4 border-t border-gray-300">
+
+          <h2 class="font-bold text-lg mb-4">ACCEPTANCE OF PROPOSAL</h2>
+
+          <p class="text-gray-700 text-sm">The prices, specifications, and conditions are satisfactory and hereby accepted. You are authorized to do the work as specified. Payment will be made as outlined above.</p>
+
+
+
+          <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+
+            <div class="flex flex-col space-y-2">
+
+              <p class="mt-4 border-b border-gray-400 pb-1">Signature:</p>
+
+              <p class="text-xs text-gray-500">_______________________________________________</p>
+
+            </div>
+
+            <div class="flex flex-col space-y-2">
+
+              <p class="mt-4 border-b border-gray-400 pb-1">Date:</p>
+
+              <p class="text-xs text-gray-500">_______________________________________________</p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- Buttons (hidden on print) -->
+
+      <div class="flex justify-end space-x-4 mt-8 no-print">
+
+        <button id="back-btn" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
+
+          Back to Editor
+
+        </button>
+
+        <button id="print-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
+
+          Print Proposal
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+      const proposalForm = document.getElementById('proposal-form');
+
+      const proposalOutput = document.getElementById('proposal-output');
+
+      const generateBtn = document.getElementById('generate-btn');
+
+      const printBtn = document.getElementById('print-btn');
+
+      const backBtn = document.getElementById('back-btn');
+
+
+
+      const toInput = document.getElementById('to');
+
+      const streetAddressInput = document.getElementById('street-address');
+
+      const cityInput = document.getElementById('city');
+
+      const stateInput = document.getElementById('state');
+
+      const zipCodeInput = document.getElementById('zip-code');
+
+      const jobNameInput = document.getElementById('job-name');
+
+      const proposalNoInput = document.getElementById('proposal-no');
+
+      const locationInput = document.getElementById('location');
+
+      const dateInput = document.getElementById('date');
+
+      const scopeInput = document.getElementById('scope-of-services');
+
+      const descriptionInput = document.getElementById('project-description');
+
+      const warrantyInput = document.getElementById('warranty');
+
+      const pricingInputsContainer = document.getElementById('pricing-inputs-container');
+
+      const addPriceItemBtn = document.getElementById('add-price-item-btn');
+
+      const salesTaxInput = document.getElementById('sales-tax');
+
+      const paymentTermsInput = document.getElementById('payment-terms');
+
+
+
+      const outputTo = document.getElementById('output-to');
+
+      const outputStreetAddress = document.getElementById('output-street-address');
+
+      const outputCityStateZip = document.getElementById('output-city-state-zip');
+
+      const outputJobName = document.getElementById('output-job-name');
+
+      const outputProposalNo = document.getElementById('output-proposal-no');
+
+      const outputLocation = document.getElementById('output-location');
+
+      const outputDate = document.getElementById('output-date');
+
+      const outputScope = document.getElementById('output-scope');
+
+      const outputDescriptionList = document.getElementById('output-description');
+
+      const outputWarranty = document.getElementById('output-warranty');
+
+      const outputPricingTable = document.getElementById('output-pricing-table');
+
+      const outputSubtotal = document.getElementById('output-subtotal');
+
+      const outputSalesTax = document.getElementById('output-sales-tax');
+
+      const outputTotal = document.getElementById('output-total');
+
+      const outputPaymentTerms = document.getElementById('output-payment-terms');
+
+
+
+      const today = new Date().toISOString().split('T')[0];
+
+      dateInput.value = today;
+
+
+
+      function addPricingItem() {
+
+        const itemDiv = document.createElement('div');
+
+        itemDiv.className = 'flex items-center space-x-2';
+
+        itemDiv.innerHTML = `
+
+          <input type="text" class="pricing-description block w-1/2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border" placeholder="Item Description">
+
+          <input type="number" step="0.01" class="pricing-amount block w-1/4 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border" placeholder="Price">
+
+          <div class="flex items-center w-1/4">
+
+            <input type="checkbox" checked class="taxable-checkbox rounded text-blue-600 focus:ring-blue-500 mr-2">
+
+            <label class="text-sm text-gray-700">Taxable</label>
+
+          </div>
+
+        `;
+
+        pricingInputsContainer.appendChild(itemDiv);
+
+      }
+
+      addPriceItemBtn.addEventListener('click', addPricingItem);
+
+
+
+      generateBtn.addEventListener('click', () => {
+
+        outputTo.textContent = toInput.value || 'N/A';
+
+        outputStreetAddress.textContent = streetAddressInput.value || '';
+
+        outputCityStateZip.textContent = [cityInput.value, stateInput.value, zipCodeInput.value].filter(Boolean).join(', ') || '';
+
+        outputJobName.textContent = jobNameInput.value || 'N/A';
+
+        outputProposalNo.textContent = proposalNoInput.value || 'N/A';
+
+        outputLocation.textContent = locationInput.value || 'N/A';
+
+        outputDate.textContent = dateInput.value || 'N/A';
+
+        outputScope.textContent = scopeInput.value || 'N/A';
+
+        outputWarranty.textContent = warrantyInput.value || 'N/A';
+
+        outputPaymentTerms.textContent = paymentTermsInput.value || 'N/A';
+
+
+
+        outputDescriptionList.innerHTML = '';
+
+        const descriptionLines = descriptionInput.value.split('\n').filter(line => line.trim() !== '');
+
+        descriptionLines.forEach(line => {
+
+          const li = document.createElement('li');
+
+          li.textContent = line.trim();
+
+          outputDescriptionList.appendChild(li);
+
+        });
+
+
+
+        let subtotal = 0;
+
+        let taxableSubtotal = 0;
+
+        outputPricingTable.innerHTML = '';
+
+        const pricingItems = document.querySelectorAll('#pricing-inputs-container > div');
+
+
+
+        pricingItems.forEach(itemDiv => {
+
+          const descEl = itemDiv.querySelector('.pricing-description');
+
+          const amtEl = itemDiv.querySelector('.pricing-amount');
+
+          const taxEl = itemDiv.querySelector('.taxable-checkbox');
+
+          const description = (descEl?.value || '').trim();
+
+          const price = parseFloat(amtEl?.value);
+
+          const isTaxable = !!taxEl?.checked;
+
+
+
+          if (description && !isNaN(price)) {
+
+            subtotal += price;
+
+            if (isTaxable) taxableSubtotal += price;
+
+            const row = document.createElement('div');
+
+            row.className = 'flex justify-between py-1 border-b border-gray-100';
+
+            row.innerHTML = `
+
+              <span>${description}${isTaxable ? ' *' : ''}</span>
+
+              <span>$${price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+
+            `;
+
+            outputPricingTable.appendChild(row);
+
+          }
+
+        });
+
+
+
+        const salesTaxRate = (parseFloat(salesTaxInput.value) || 0) / 100;
+
+        const salesTaxAmount = taxableSubtotal * salesTaxRate;
+
+        const total = subtotal + salesTaxAmount;
+
+
+
+        outputSubtotal.textContent = `$${subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+        outputSalesTax.textContent = `$${salesTaxAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+        outputTotal.textContent = `$${total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+
+
+        proposalForm.classList.add('hidden');
+
+        proposalOutput.classList.remove('hidden');
+
+      });
+
+
+
+      printBtn.addEventListener('click', () => window.print());
+
+      backBtn.addEventListener('click', () => {
+
+        proposalOutput.classList.add('hidden');
+
+        proposalForm.classList.remove('hidden');
+
+      });
+
+    });
+
+  </script>
+
 </body>
-</html>
 
+</html>
 
