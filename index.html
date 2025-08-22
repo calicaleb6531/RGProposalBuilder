@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>R & G Proposal Builder</title>
-    <!-- Use Tailwind CSS for modern styling -->
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
     <style>
         /* Custom font for a clean, professional look */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
@@ -14,22 +16,26 @@
             background-color: #f3f4f6;
         }
 
-        /* Basic print styles */
+        /* Print styles */
         @media print {
-            body {
-                background-color: #fff;
-            }
-            .no-print {
+            body { background-color: #fff; }
+
+            /* Hide any element marked as no-print AND all its children */
+            .no-print,
+            .no-print * {
                 display: none !important;
             }
-            .proposal-output-container {
-                box-shadow: none;
-                border: none;
-                padding: 0;
-                margin: 0;
+
+            /* Remove outer card styling for clean print */
+            .proposal-output-container,
+            #proposal-output {
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
             }
         }
-        
+
         /* Center the logo image */
         .logo-container {
             display: flex;
@@ -53,19 +59,17 @@
 
         <!-- Proposal Form Section (visible by default) -->
         <div id="proposal-form" class="bg-white p-8 rounded-lg shadow-xl border border-gray-200 no-print">
-            
             <!-- Company Header & Logo Section -->
             <div class="logo-container">
-                <!-- Image source updated to point to the user-provided URL.
-                     An onerror handler is added for a fallback placeholder image. -->
-                <img src="https://github.com/calicaleb6531/RGProposalBuilder/blob/main/RGLogo.png?raw=true" onerror="this.onerror=null;this.src='https://placehold.co/200x60/87CEEB/ffffff?text=Your+Logo+Here';" alt="R & G Air Conditioning & Refrigeration Service Corp. Logo">
+                <img src="https://github.com/calicaleb6531/RGProposalBuilder/blob/main/RGLogo.png?raw=true"
+                     onerror="this.onerror=null;this.src='https://placehold.co/200x60/87CEEB/ffffff?text=Your+Logo+Here';"
+                     alt="R & G Air Conditioning & Refrigeration Service Corp. Logo">
             </div>
 
             <h1 class="text-3xl font-bold text-center text-gray-800 mb-6 uppercase tracking-wide">Proposal</h1>
 
             <!-- Form Fields Section -->
             <div class="space-y-6">
-                
                 <!-- Client Info -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -97,7 +101,7 @@
                         <input type="text" id="zip-code" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
                     </div>
                 </div>
-                
+
                 <!-- Job Details -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -116,11 +120,10 @@
                 </div>
 
                 <div class="bg-gray-50 p-4 rounded-md border border-gray-200">
-                    <!-- Removed text-center class for left-alignment -->
                     <p class="text-sm text-gray-600 italic">We hereby submit specifications and estimates for:</p>
                     <p class="text-sm text-gray-600 italic mt-2">Our service proposal for the reference project. The detail of services covered under this proposal is described below.</p>
                 </div>
-                
+
                 <!-- Scope of Services -->
                 <div>
                     <label for="scope-of-services" class="block text-sm font-medium text-gray-700">Scope of Services:</label>
@@ -133,17 +136,16 @@
                     <textarea id="project-description" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border" placeholder="Enter items on separate lines for bullet points..."></textarea>
                 </div>
 
-                <!-- New Warranty Section -->
+                <!-- Warranty -->
                 <div>
                     <label for="warranty" class="block text-sm font-medium text-gray-700">Warranty:</label>
                     <textarea id="warranty" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border"></textarea>
                 </div>
 
-                <!-- Dynamic Pricing Section -->
+                <!-- Dynamic Pricing -->
                 <div>
                     <p class="block text-sm font-medium text-gray-700">Pricing:</p>
                     <div id="pricing-inputs-container" class="space-y-2 mt-1">
-                        <!-- Initial input field for pricing -->
                         <div class="flex items-center space-x-2">
                             <input type="text" class="pricing-description block w-1/2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border" placeholder="Item Description">
                             <input type="number" step="0.01" class="pricing-amount block w-1/4 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border" placeholder="Price">
@@ -157,7 +159,7 @@
                         Add Item
                     </button>
                 </div>
-                
+
                 <!-- Sales Tax -->
                 <div>
                     <label for="sales-tax" class="block text-sm font-medium text-gray-700">Sales Tax %:</label>
@@ -180,11 +182,12 @@
         </div>
 
         <!-- Proposal Output Section (hidden by default) -->
-        <div id="proposal-output" class="hidden bg-white p-8 rounded-lg shadow-xl border border-gray-200">
-            
-            <!-- Company Header & Logo (identical to form) -->
+        <div id="proposal-output" class="hidden bg-white p-8 rounded-lg shadow-xl border border-gray-200 proposal-output-container">
+            <!-- Company Header & Logo -->
             <div class="logo-container">
-                <img src="https://github.com/calicaleb6531/RGProposalBuilder/blob/main/RGLogo.png?raw=true" onerror="this.onerror=null;this.src='https://placehold.co/200x60/87CEEB/ffffff?text=Your+Logo+Here';" alt="R & G Air Conditioning & Refrigeration Service Corp. Logo">
+                <img src="https://github.com/calicaleb6531/RGProposalBuilder/blob/main/RGLogo.png?raw=true"
+                     onerror="this.onerror=null;this.src='https://placehold.co/200x60/87CEEB/ffffff?text=Your+Logo+Here';"
+                     alt="R & G Air Conditioning & Refrigeration Service Corp. Logo">
             </div>
 
             <h1 class="text-3xl font-bold text-center text-gray-800 mb-6 uppercase tracking-wide">Proposal</h1>
@@ -204,9 +207,8 @@
                     <p><strong>Location:</strong> <span id="output-location"></span></p>
                     <p><strong>Date:</strong> <span id="output-date"></span></p>
                 </div>
-                
+
                 <div class="mt-6">
-                    <!-- Removed text-center class for left-alignment -->
                     <p>We hereby submit specifications and estimates for:</p>
                     <p class="mt-2">Our service proposal for the reference project. The detail of services covered under this proposal is described below.</p>
                 </div>
@@ -220,8 +222,7 @@
                     <p class="font-bold text-center">Project Description</p>
                     <ul id="output-description" class="mt-2 list-disc list-inside"></ul>
                 </div>
-                
-                <!-- New Warranty Section Output -->
+
                 <div class="mt-6">
                     <p class="font-bold text-center">Warranty</p>
                     <p id="output-warranty" class="mt-2 whitespace-pre-wrap"></p>
@@ -230,7 +231,6 @@
                 <div class="mt-6">
                     <p class="font-bold text-center">Pricing</p>
                     <div class="mt-2">
-                        <!-- Dynamic pricing table will be built here -->
                         <div id="output-pricing-table" class="mt-4 border-b border-gray-300 pb-2"></div>
                         <div class="mt-4 pt-4 border-t border-gray-300">
                             <div class="flex justify-between font-bold">
@@ -259,7 +259,7 @@
                 <div class="mt-8 pt-4 border-t border-gray-300">
                     <h2 class="font-bold text-lg mb-4">ACCEPTANCE OF PROPOSAL</h2>
                     <p class="text-gray-700 text-sm">The prices, specifications, and conditions are satisfactory and hereby accepted. You are authorized to do the work as specified. Payment will be made as outlined above.</p>
-                    
+
                     <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
                         <div class="flex flex-col space-y-2">
                             <p class="mt-4 border-b border-gray-400 pb-1">Signature:</p>
@@ -271,11 +271,9 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-            
-            <!-- Output Buttons -->
-            <!-- The button container is where the fix is applied. I've ensured this div has no-print class -->
+
+            <!-- Output Buttons (hidden when printing) -->
             <div class="flex justify-end space-x-4 mt-8 no-print">
                 <button id="back-btn" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
                     Back to Editor
@@ -290,13 +288,12 @@
     <!-- JavaScript for form functionality -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Get references to all the form elements and output elements
             const proposalForm = document.getElementById('proposal-form');
             const proposalOutput = document.getElementById('proposal-output');
             const generateBtn = document.getElementById('generate-btn');
             const printBtn = document.getElementById('print-btn');
             const backBtn = document.getElementById('back-btn');
-            
+
             // Form inputs
             const toInput = document.getElementById('to');
             const streetAddressInput = document.getElementById('street-address');
@@ -315,7 +312,7 @@
             const salesTaxInput = document.getElementById('sales-tax');
             const paymentTermsInput = document.getElementById('payment-terms');
 
-            // Output spans and elements
+            // Output elements
             const outputTo = document.getElementById('output-to');
             const outputStreetAddress = document.getElementById('output-street-address');
             const outputCityStateZip = document.getElementById('output-city-state-zip');
@@ -332,11 +329,11 @@
             const outputTotal = document.getElementById('output-total');
             const outputPaymentTerms = document.getElementById('output-payment-terms');
 
-            // Set today's date as the default value
+            // Default today's date
             const today = new Date().toISOString().split('T')[0];
             dateInput.value = today;
 
-            // Function to add a new pricing input field
+            // Add pricing item row
             function addPricingItem() {
                 const itemDiv = document.createElement('div');
                 itemDiv.className = 'flex items-center space-x-2';
@@ -350,13 +347,10 @@
                 `;
                 pricingInputsContainer.appendChild(itemDiv);
             }
-
-            // Event listener for the "Add Item" button
             addPriceItemBtn.addEventListener('click', addPricingItem);
 
-            // Event listener for the "Generate Proposal" button
+            // Generate output
             generateBtn.addEventListener('click', () => {
-                // Populate the output section with values from the form inputs
                 outputTo.textContent = toInput.value || 'N/A';
                 outputStreetAddress.textContent = streetAddressInput.value || '';
                 outputCityStateZip.textContent = [cityInput.value, stateInput.value, zipCodeInput.value].filter(Boolean).join(', ') || '';
@@ -368,8 +362,8 @@
                 outputWarranty.textContent = warrantyInput.value || 'N/A';
                 outputPaymentTerms.textContent = paymentTermsInput.value || 'N/A';
 
-                // Handle Project Description as bullet points
-                outputDescriptionList.innerHTML = ''; // Clear previous items
+                // Description -> bullets
+                outputDescriptionList.innerHTML = '';
                 const descriptionLines = descriptionInput.value.split('\n').filter(line => line.trim() !== '');
                 descriptionLines.forEach(line => {
                     const li = document.createElement('li');
@@ -377,40 +371,36 @@
                     outputDescriptionList.appendChild(li);
                 });
 
-                // Handle Pricing and calculations with professional table
+                // Pricing
                 let subtotal = 0;
                 let taxableSubtotal = 0;
-                outputPricingTable.innerHTML = ''; // Clear previous table
+                outputPricingTable.innerHTML = '';
                 const pricingItems = document.querySelectorAll('#pricing-inputs-container > div');
 
                 pricingItems.forEach(itemDiv => {
-                    const descriptionInput = itemDiv.querySelector('.pricing-description');
-                    const amountInput = itemDiv.querySelector('.pricing-amount');
-                    const taxableCheckbox = itemDiv.querySelector('.taxable-checkbox');
+                    const descEl = itemDiv.querySelector('.pricing-description');
+                    const amtEl = itemDiv.querySelector('.pricing-amount');
+                    const taxEl = itemDiv.querySelector('.taxable-checkbox');
 
-                    const description = descriptionInput.value.trim();
-                    const price = parseFloat(amountInput.value);
-                    const isTaxable = taxableCheckbox.checked;
+                    const description = (descEl?.value || '').trim();
+                    const price = parseFloat(amtEl?.value);
+                    const isTaxable = !!taxEl?.checked;
 
-                    if (description !== '' && !isNaN(price)) {
+                    if (description && !isNaN(price)) {
                         subtotal += price;
-                        if (isTaxable) {
-                            taxableSubtotal += price;
-                        }
+                        if (isTaxable) taxableSubtotal += price;
+
                         const row = document.createElement('div');
                         row.className = 'flex justify-between py-1 border-b border-gray-100';
-                        const formattedPrice = price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                        const taxableIndicator = isTaxable ? ' *' : '';
                         row.innerHTML = `
-                            <span>${description}${taxableIndicator}</span>
-                            <span>$${formattedPrice}</span>
+                            <span>${description}${isTaxable ? ' *' : ''}</span>
+                            <span>$${price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                         `;
                         outputPricingTable.appendChild(row);
                     }
                 });
 
-                // Calculate and display totals
-                const salesTaxRate = parseFloat(salesTaxInput.value) / 100 || 0;
+                const salesTaxRate = (parseFloat(salesTaxInput.value) || 0) / 100;
                 const salesTaxAmount = taxableSubtotal * salesTaxRate;
                 const total = subtotal + salesTaxAmount;
 
@@ -418,17 +408,17 @@
                 outputSalesTax.textContent = `$${salesTaxAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
                 outputTotal.textContent = `$${total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-                // Hide the form and show the output section
+                // Swap views
                 proposalForm.classList.add('hidden');
                 proposalOutput.classList.remove('hidden');
             });
 
-            // Event listener for the "Print Proposal" button
+            // Print
             printBtn.addEventListener('click', () => {
                 window.print();
             });
 
-            // Event listener for the "Back to Editor" button
+            // Back to editor
             backBtn.addEventListener('click', () => {
                 proposalOutput.classList.add('hidden');
                 proposalForm.classList.remove('hidden');
